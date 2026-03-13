@@ -4,785 +4,1380 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PlanningScout — UK Planning Intelligence for Consultancies</title>
-<meta name="description" content="Automated UK planning monitoring. Appeals, new applications, prior approvals, market intel — scored, tailored, and delivered weekly to your consultancy.">
+<meta name="description" content="PlanningScout scans 44+ UK council portals every week and delivers pre-qualified planning leads tailored to your practice. Start free.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-/* ══════════════════════════════════════
+/* ────────────────────────────────────────────────
    TOKENS
-══════════════════════════════════════ */
+──────────────────────────────────────────────── */
 :root {
-  --bg:    #090c14;
-  --bg1:   #0d1120;
-  --bg2:   #101623;
-  --card:  #131a2b;
-  --card2: #192033;
-  --line:  #1d2640;
-  --line2: #273352;
+  --ink:       #0d1a2b;
+  --ink-mid:   #334155;
+  --ink-dim:   #64748b;
+  --ink-faint: #94a3b8;
 
-  --amber:  #f0a500;
-  --ambg:   rgba(240,165,0,.1);
-  --ambd:   rgba(240,165,0,.22);
+  --surface:   #ffffff;
+  --surface-2: #f7f8fa;
+  --surface-3: #f0f2f5;
 
-  --green:  #22c55e;
-  --gbg:    rgba(34,197,94,.09);
-  --gbd:    rgba(34,197,94,.24);
+  --border:    #e2e8f0;
+  --border-2:  #cbd5e1;
 
-  --teal:   #2dd4bf;
-  --tbg:    rgba(45,212,191,.09);
-  --tbd:    rgba(45,212,191,.24);
+  --amber:     #c8860a;
+  --amber-lt:  #fdf3e3;
+  --amber-md:  #fde68a;
+  --amber-bdr: rgba(200,134,10,.22);
 
-  --violet: #a78bfa;
-  --vbg:    rgba(167,139,250,.09);
-  --vbd:    rgba(167,139,250,.24);
+  --green:     #16a34a;
+  --green-lt:  #f0fdf4;
+  --green-bdr: rgba(22,163,74,.22);
 
-  --dim:    #4e617c;
-  --mid:    #8da4c4;
-  --bright: #d8eaff;
-  --white:  #f4f9ff;
+  --navy:      #1e3a5f;
+  --navy-lt:   #eff4fb;
+  --navy-bdr:  rgba(30,58,95,.18);
 
-  --head:  'Bricolage Grotesque', system-ui, sans-serif;
-  --body:  'DM Sans', system-ui, sans-serif;
-  --mono:  'IBM Plex Mono', monospace;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow:    0 4px 16px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.05);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,.10), 0 4px 12px rgba(0,0,0,.06);
+
+  --head: 'Fraunces', Georgia, serif;
+  --body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
 
   --ease: cubic-bezier(.4,0,.2,1);
-  --r:    10px;
+  --r:    8px;
   --r2:   14px;
+  --r3:   20px;
 }
 
-/* ══════════════════════════════════════
+/* ────────────────────────────────────────────────
    RESET
-══════════════════════════════════════ */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);color:var(--mid);
-  font-family:var(--body);font-size:16px;line-height:1.65;
-  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+──────────────────────────────────────────────── */
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--surface);
+  color: var(--ink-mid);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
-a{text-decoration:none;color:inherit}
-::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--line2);border-radius:2px}
+a { text-decoration: none; color: inherit; }
+img, svg { display: block; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--surface-2); }
+::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 4px; }
 
-/* ══════════════════════════════════════
+/* ────────────────────────────────────────────────
    LAYOUT
-══════════════════════════════════════ */
-.wrap{max-width:1060px;margin:0 auto;padding:0 32px}
-@media(max-width:580px){.wrap{padding:0 18px}}
+──────────────────────────────────────────────── */
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 36px; }
+@media (max-width: 580px) { .wrap { padding: 0 20px; } }
 
-/* ══════════════════════════════════════
-   GRID BACKGROUND
-══════════════════════════════════════ */
-.grid-bg{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
-.grid-bg::before{
-  content:'';position:absolute;inset:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
-  background-size:52px 52px;
-  mask-image:radial-gradient(ellipse 80% 65% at 50% 0%,black 25%,transparent 100%);
-}
-.grid-bg::after{
-  content:'';position:absolute;
-  width:900px;height:500px;
-  top:-180px;left:50%;transform:translateX(-50%);
-  background:radial-gradient(ellipse,rgba(240,165,0,.06) 0%,transparent 68%);
-}
-
-/* ══════════════════════════════════════
+/* ────────────────────────────────────────────────
    NAV
-══════════════════════════════════════ */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:99;height:62px;
-  background:rgba(9,12,20,.88);
-  backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
-  border-bottom:1px solid var(--line);
-  transition:background .3s var(--ease),border-color .3s var(--ease);
+──────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 99;
+  height: 66px;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: box-shadow .25s var(--ease);
 }
-nav.scrolled{background:rgba(9,12,20,.97);border-color:var(--line2)}
-.nav-inner{
-  max-width:1060px;margin:0 auto;padding:0 32px;
-  height:100%;display:flex;align-items:center;
-  justify-content:space-between;gap:20px;
+nav.scrolled { box-shadow: var(--shadow-sm); }
+.nav-inner {
+  max-width: 1080px; margin: 0 auto; padding: 0 36px;
+  height: 100%; display: flex; align-items: center;
+  justify-content: space-between; gap: 24px;
 }
-.logo{display:flex;align-items:center;gap:9px;flex-shrink:0}
-.logo-txt{
-  font-family:var(--head);font-size:17px;font-weight:800;
-  color:var(--white);letter-spacing:-.3px;
+/* ── LOGO ── */
+.logo { display: flex; align-items: center; gap: 11px; flex-shrink: 0; }
+.logo-mark {
+  width: 38px; height: 38px;
+  background: var(--navy);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(30,58,95,.25);
 }
-.logo-txt span{color:var(--amber)}
-.nav-links{display:flex;gap:2px;list-style:none}
-@media(max-width:700px){.nav-links{display:none}}
-.nav-links a{
-  font-family:var(--body);font-size:13.5px;font-weight:500;color:var(--dim);
-  padding:6px 13px;border-radius:7px;
-  transition:color .15s,background .15s;
+.logo-text {
+  font-family: var(--head);
+  font-size: 18px; font-weight: 600;
+  color: var(--ink); letter-spacing: -.3px;
 }
-.nav-links a:hover{color:var(--bright);background:rgba(255,255,255,.05)}
-.nav-cta{
-  font-family:var(--body);font-size:13px;font-weight:600;color:var(--bg);
-  background:var(--amber);padding:8px 18px;border-radius:8px;
-  flex-shrink:0;white-space:nowrap;
-  transition:opacity .15s,transform .15s,box-shadow .15s;
+.logo-text span { color: var(--amber); }
+.nav-links { display: flex; gap: 2px; list-style: none; }
+@media (max-width: 720px) { .nav-links { display: none; } }
+.nav-links a {
+  font-size: 14px; font-weight: 500; color: var(--ink-dim);
+  padding: 7px 14px; border-radius: var(--r);
+  transition: color .15s, background .15s;
 }
-.nav-cta:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 6px 20px rgba(240,165,0,.25)}
+.nav-links a:hover { color: var(--ink); background: var(--surface-2); }
+.nav-cta {
+  display: flex; align-items: center; gap: 10px;
+  flex-shrink: 0;
+}
+.btn-outline-nav {
+  font-family: var(--body); font-size: 13.5px; font-weight: 500;
+  color: var(--ink-mid); padding: 8px 16px; border-radius: var(--r);
+  border: 1px solid var(--border-2);
+  transition: border-color .15s, color .15s;
+  white-space: nowrap;
+}
+.btn-outline-nav:hover { border-color: var(--ink-dim); color: var(--ink); }
+.btn-primary {
+  font-family: var(--body); font-size: 13.5px; font-weight: 600;
+  color: #fff; background: var(--navy);
+  padding: 9px 20px; border-radius: var(--r);
+  border: none; cursor: pointer; white-space: nowrap;
+  transition: background .18s, transform .18s, box-shadow .18s;
+  box-shadow: 0 2px 8px rgba(30,58,95,.3);
+}
+.btn-primary:hover {
+  background: #162e4d;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(30,58,95,.28);
+}
 
-/* ══════════════════════════════════════
-   SECTION BASE
-══════════════════════════════════════ */
-section{padding:96px 0;border-bottom:1px solid var(--line)}
-section:last-of-type{border-bottom:none}
+/* ────────────────────────────────────────────────
+   SECTIONS
+──────────────────────────────────────────────── */
+section { border-bottom: 1px solid var(--border); }
+section:last-of-type { border-bottom: none; }
 
-.eyebrow{
-  display:inline-flex;align-items:center;gap:7px;
-  font-family:var(--mono);font-size:11px;font-weight:500;
-  color:var(--amber);letter-spacing:.11em;text-transform:uppercase;
-  margin-bottom:14px;
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  color: var(--amber); letter-spacing: .12em; text-transform: uppercase;
+  margin-bottom: 16px;
 }
-.eyebrow::before{content:'';display:inline-block;width:16px;height:1px;background:var(--amber);border-radius:1px}
-h2{
-  font-family:var(--head);
-  font-size:clamp(27px,4vw,40px);font-weight:800;
-  color:var(--white);letter-spacing:-.6px;line-height:1.13;margin-bottom:14px;
+.eyebrow::before {
+  content: '';
+  width: 18px; height: 1.5px;
+  background: var(--amber); border-radius: 2px; display: inline-block;
 }
-.subtext{font-family:var(--body);font-size:16px;color:var(--dim);line-height:1.8;max-width:520px}
+h2 {
+  font-family: var(--head);
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 600; color: var(--ink);
+  letter-spacing: -.5px; line-height: 1.12;
+  margin-bottom: 16px;
+}
+.lead { font-size: 17px; color: var(--ink-dim); line-height: 1.78; max-width: 560px; }
 
-/* ══════════════════════════════════════
+/* ────────────────────────────────────────────────
    HERO
-══════════════════════════════════════ */
-#hero{
-  position:relative;overflow:hidden;
-  padding:150px 0 108px;text-align:center;
+──────────────────────────────────────────────── */
+#hero {
+  padding: 130px 0 0;
+  background: linear-gradient(180deg, #f4f7fb 0%, var(--surface) 100%);
+  overflow: hidden;
+  position: relative;
 }
-.live-pill{
-  display:inline-flex;align-items:center;gap:8px;
-  font-family:var(--mono);font-size:11px;font-weight:500;
-  color:var(--teal);letter-spacing:.08em;text-transform:uppercase;
-  background:var(--tbg);border:1px solid var(--tbd);
-  padding:5px 15px 5px 11px;border-radius:100px;margin-bottom:30px;
+/* subtle dot grid */
+#hero::before {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(circle, #c8d4e0 1px, transparent 1px);
+  background-size: 30px 30px;
+  opacity: .4;
+  mask-image: linear-gradient(180deg, rgba(0,0,0,.5) 0%, transparent 60%);
 }
-.pdot{
-  width:6px;height:6px;background:var(--teal);border-radius:50%;
-  box-shadow:0 0 0 0 rgba(45,212,191,.5);
-  animation:ring 2.4s ease-in-out infinite;
+.hero-content {
+  position: relative; z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  padding-bottom: 0;
 }
-@keyframes ring{
-  0%,100%{box-shadow:0 0 0 0 rgba(45,212,191,.5)}
-  60%{box-shadow:0 0 0 7px rgba(45,212,191,0)}
+@media (max-width: 860px) {
+  .hero-content { grid-template-columns: 1fr; gap: 48px; }
 }
-h1{
-  font-family:var(--head);
-  font-size:clamp(40px,7.5vw,72px);font-weight:800;
-  color:var(--white);letter-spacing:-2.5px;line-height:1.04;
-  margin-bottom:22px;
+.hero-text {}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  color: var(--green); letter-spacing: .09em; text-transform: uppercase;
+  background: var(--green-lt); border: 1px solid var(--green-bdr);
+  padding: 5px 12px; border-radius: 100px; margin-bottom: 24px;
 }
-h1 em{font-style:normal;color:var(--amber)}
-.hero-sub{
-  font-family:var(--body);font-size:clamp(15.5px,2vw,18.5px);
-  color:var(--mid);line-height:1.78;
-  max-width:530px;margin:0 auto 38px;
+.badge-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+  animation: pulse 2.5s ease-in-out infinite;
 }
-.hero-btns{
-  display:flex;align-items:center;justify-content:center;
-  gap:10px;flex-wrap:wrap;margin-bottom:40px;
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(.8); }
 }
-.btn-fill{
-  display:inline-flex;align-items:center;gap:7px;
-  font-family:var(--body);font-size:15px;font-weight:600;color:var(--bg);
-  background:var(--amber);padding:13px 26px;border-radius:9px;
-  border:none;cursor:pointer;
-  transition:background .18s,transform .18s,box-shadow .18s;
+h1 {
+  font-family: var(--head);
+  font-size: clamp(36px, 5.5vw, 58px);
+  font-weight: 600; color: var(--ink);
+  letter-spacing: -1.5px; line-height: 1.06;
+  margin-bottom: 22px;
 }
-.btn-fill:hover{background:#f5b83a;transform:translateY(-2px);box-shadow:0 10px 28px rgba(240,165,0,.25)}
-.btn-ghost{
-  display:inline-flex;align-items:center;gap:7px;
-  font-family:var(--body);font-size:15px;font-weight:500;color:var(--mid);
-  background:transparent;padding:13px 26px;border-radius:9px;
-  border:1px solid var(--line2);cursor:pointer;transition:all .18s;
+h1 em { font-style: italic; color: var(--amber); }
+.hero-sub {
+  font-size: 17px; color: var(--ink-dim); line-height: 1.78;
+  margin-bottom: 36px; max-width: 480px;
 }
-.btn-ghost:hover{color:var(--bright);border-color:var(--mid);background:rgba(255,255,255,.03)}
-.trust-bar{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
-.ti{font-family:var(--body);font-size:13px;font-weight:500;color:var(--dim);display:flex;align-items:center;gap:5px}
-.ti svg{flex-shrink:0}
-.tsep{width:3px;height:3px;background:var(--line2);border-radius:50%}
+.hero-actions {
+  display: flex; align-items: center; gap: 12px;
+  flex-wrap: wrap; margin-bottom: 36px;
+}
+.btn-hero {
+  font-family: var(--body); font-size: 15px; font-weight: 600;
+  color: #fff; background: var(--navy);
+  padding: 14px 28px; border-radius: var(--r2);
+  border: none; cursor: pointer;
+  transition: background .18s, transform .18s, box-shadow .18s;
+  box-shadow: 0 4px 16px rgba(30,58,95,.3);
+}
+.btn-hero:hover {
+  background: #162e4d; transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(30,58,95,.28);
+}
+.btn-hero-ghost {
+  font-family: var(--body); font-size: 15px; font-weight: 500;
+  color: var(--ink-mid); background: transparent;
+  padding: 14px 24px; border-radius: var(--r2);
+  border: 1.5px solid var(--border-2); cursor: pointer;
+  transition: all .18s;
+}
+.btn-hero-ghost:hover { border-color: var(--ink-mid); color: var(--ink); }
+.hero-proof {
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+}
+.proof-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--ink-faint);
+}
+.proof-item svg { flex-shrink: 0; color: var(--green); }
 
-/* ══════════════════════════════════════
-   STATS BAR
-══════════════════════════════════════ */
-#stats{padding:0;border-bottom:1px solid var(--line);background:var(--bg1)}
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr)}
-@media(max-width:600px){.stats-row{grid-template-columns:repeat(2,1fr)}}
-.stat{padding:28px 20px;text-align:center;border-right:1px solid var(--line)}
-.stat:last-child{border-right:none}
-.stat-n{
-  font-family:var(--head);font-size:30px;font-weight:800;
-  color:var(--white);letter-spacing:-1px;line-height:1;margin-bottom:5px;
+/* ── Hero visual / screenshot mock ── */
+.hero-visual {
+  position: relative;
 }
-.stat-n span{color:var(--amber)}
-.stat-l{font-family:var(--mono);font-size:10.5px;color:var(--dim);letter-spacing:.09em;text-transform:uppercase}
+@media (max-width: 860px) { .hero-visual { max-width: 580px; margin: 0 auto; } }
+.hero-screen {
+  background: var(--surface);
+  border: 1.5px solid var(--border-2);
+  border-radius: var(--r3);
+  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(30,58,95,.04);
+  overflow: hidden;
+  transform: perspective(1200px) rotateY(-4deg) rotateX(2deg);
+  transform-origin: left center;
+  transition: transform .4s var(--ease);
+}
+.hero-screen:hover { transform: perspective(1200px) rotateY(-1deg) rotateX(0deg); }
+.hs-bar {
+  background: var(--surface-2); border-bottom: 1px solid var(--border);
+  padding: 12px 18px; display: flex; align-items: center; gap: 8px;
+}
+.hs-dots { display: flex; gap: 6px; }
+.hs-dot { width: 10px; height: 10px; border-radius: 50%; }
+.hs-dot.r { background: #fc615d; }
+.hs-dot.y { background: #fdbc40; }
+.hs-dot.g { background: #34c759; }
+.hs-url {
+  flex: 1; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; padding: 5px 10px;
+  font-family: var(--mono); font-size: 10px; color: var(--ink-dim);
+  text-align: center;
+}
+.hs-content { padding: 18px; }
+.hs-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px;
+}
+.hs-title {
+  font-family: var(--head); font-size: 13px; font-weight: 600; color: var(--ink);
+}
+.hs-week {
+  font-family: var(--mono); font-size: 10px; color: var(--ink-faint);
+  background: var(--surface-2); border: 1px solid var(--border);
+  padding: 3px 8px; border-radius: 5px;
+}
+/* lead rows in mock */
+.hs-lead {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r); padding: 12px 14px;
+  margin-bottom: 8px; display: flex; align-items: flex-start; gap: 10px;
+  transition: border-color .15s, box-shadow .15s;
+}
+.hs-lead:hover { border-color: var(--navy-bdr); box-shadow: var(--shadow-sm); }
+.hs-lead-score {
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  background: var(--navy); color: #fff;
+  padding: 3px 7px; border-radius: 5px; flex-shrink: 0;
+  line-height: 1;
+}
+.hs-lead-score.high { background: #16a34a; }
+.hs-lead-score.mid { background: var(--amber); color: #fff; }
+.hs-lead-body { flex: 1; min-width: 0; }
+.hs-lead-ref { font-family: var(--mono); font-size: 10px; color: var(--ink-faint); margin-bottom: 3px; }
+.hs-lead-title {
+  font-size: 11.5px; font-weight: 600; color: var(--ink);
+  line-height: 1.35; margin-bottom: 5px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.hs-lead-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.hs-tag {
+  font-family: var(--mono); font-size: 9px; font-weight: 500;
+  padding: 2px 6px; border-radius: 4px;
+}
+.hs-tag.amber { background: var(--amber-lt); color: var(--amber); border: 1px solid var(--amber-bdr); }
+.hs-tag.green { background: var(--green-lt); color: var(--green); border: 1px solid var(--green-bdr); }
+.hs-tag.navy { background: var(--navy-lt); color: var(--navy); border: 1px solid var(--navy-bdr); }
+.hs-footer {
+  border-top: 1px solid var(--border); margin-top: 4px; padding-top: 10px;
+  display: flex; justify-content: space-between;
+  font-family: var(--mono); font-size: 10px; color: var(--ink-faint);
+}
+/* floating card */
+.hero-float {
+  position: absolute; bottom: -16px; right: -24px;
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--r2); padding: 14px 18px;
+  box-shadow: var(--shadow-lg);
+  display: flex; align-items: center; gap: 12px;
+  min-width: 200px;
+}
+@media (max-width: 580px) { .hero-float { display: none; } }
+.hf-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--green-lt); border: 1px solid var(--green-bdr);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.hf-text {}
+.hf-num { font-family: var(--head); font-size: 20px; font-weight: 600; color: var(--ink); line-height: 1; }
+.hf-label { font-size: 11px; color: var(--ink-faint); margin-top: 2px; }
 
-/* ══════════════════════════════════════
+/* hero bottom strip */
+.hero-strip {
+  margin-top: 56px;
+  border-top: 1px solid var(--border);
+  padding: 20px 0;
+  display: flex; align-items: center; gap: 32px;
+  flex-wrap: wrap;
+  position: relative; z-index: 1;
+}
+.strip-label {
+  font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint);
+  letter-spacing: .09em; text-transform: uppercase; flex-shrink: 0;
+}
+.strip-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.strip-tag {
+  font-family: var(--mono); font-size: 11px; color: var(--ink-dim);
+  background: var(--surface-2); border: 1px solid var(--border);
+  padding: 5px 12px; border-radius: 100px;
+}
+
+/* ────────────────────────────────────────────────
+   STATS
+──────────────────────────────────────────────── */
+#stats {
+  background: var(--navy);
+  border-bottom: none;
+}
+.stats-inner {
+  display: grid; grid-template-columns: repeat(4,1fr);
+}
+@media (max-width: 640px) { .stats-inner { grid-template-columns: repeat(2,1fr); } }
+.stat-cell {
+  padding: 36px 28px; text-align: center;
+  border-right: 1px solid rgba(255,255,255,.1);
+}
+.stat-cell:last-child { border-right: none; }
+.stat-num {
+  font-family: var(--head);
+  font-size: 34px; font-weight: 600; color: #fff;
+  letter-spacing: -.5px; line-height: 1; margin-bottom: 6px;
+}
+.stat-num em { font-style: normal; color: var(--amber-md); }
+.stat-label {
+  font-family: var(--mono); font-size: 10.5px;
+  color: rgba(255,255,255,.45); letter-spacing: .09em; text-transform: uppercase;
+}
+
+/* ────────────────────────────────────────────────
    HOW IT WORKS
-══════════════════════════════════════ */
-#how{text-align:center}
-.steps{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:2px;background:var(--line);
-  border:1px solid var(--line);border-radius:var(--r2);
-  overflow:hidden;margin-top:52px;
+──────────────────────────────────────────────── */
+#how { padding: 100px 0; background: var(--surface); }
+.how-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 2px; background: var(--border);
+  border: 1px solid var(--border); border-radius: var(--r3);
+  overflow: hidden; margin-top: 56px;
 }
-@media(max-width:640px){.steps{grid-template-columns:1fr}}
-.step{
-  background:var(--card);padding:36px 28px;text-align:left;
-  transition:background .2s;
+@media (max-width: 680px) { .how-grid { grid-template-columns: 1fr; } }
+.how-step {
+  background: var(--surface); padding: 40px 34px;
+  transition: background .2s;
+  position: relative;
 }
-.step:hover{background:var(--card2)}
-.step-n{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--amber);letter-spacing:.14em;margin-bottom:16px;display:block}
-.step-icon{font-size:26px;line-height:1;margin-bottom:14px;display:block}
-.step h3{font-family:var(--head);font-size:16px;font-weight:700;color:var(--bright);margin-bottom:9px;line-height:1.3}
-.step p{font-size:13.5px;color:var(--dim);line-height:1.72}
+.how-step:hover { background: var(--surface-2); }
+.step-num {
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  color: var(--amber); letter-spacing: .12em;
+  margin-bottom: 20px; display: block;
+}
+.step-illu {
+  width: 52px; height: 52px; border-radius: var(--r2);
+  margin-bottom: 18px;
+  display: flex; align-items: center; justify-content: center;
+}
+.step-illu.navy { background: var(--navy-lt); }
+.step-illu.amber { background: var(--amber-lt); }
+.step-illu.green { background: var(--green-lt); }
+.how-step h3 {
+  font-family: var(--head); font-size: 18px; font-weight: 600;
+  color: var(--ink); margin-bottom: 10px; line-height: 1.3;
+}
+.how-step p { font-size: 14.5px; color: var(--ink-dim); line-height: 1.72; }
 
-/* ══════════════════════════════════════
-   USE CASES (4 MONITORING TYPES)
-══════════════════════════════════════ */
-#monitor{background:var(--bg1)}
-.monitor-layout{
-  display:grid;grid-template-columns:1fr 1.15fr;
-  gap:72px;align-items:center;
+/* ────────────────────────────────────────────────
+   USE CASES
+──────────────────────────────────────────────── */
+#usecases { padding: 100px 0; background: var(--surface-2); }
+.uc-header {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: start; margin-bottom: 64px;
 }
-@media(max-width:820px){.monitor-layout{grid-template-columns:1fr;gap:36px}}
-.monitor-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:480px){.monitor-cards{grid-template-columns:1fr}}
-.mc{
-  background:var(--card);border:1px solid var(--line);
-  border-radius:var(--r2);padding:22px 20px;
-  position:relative;overflow:hidden;
-  transition:border-color .2s,transform .2s,box-shadow .2s;
+@media (max-width: 800px) { .uc-header { grid-template-columns: 1fr; gap: 24px; } }
+.uc-desc { font-size: 16px; color: var(--ink-dim); line-height: 1.8; }
+.uc-desc p + p { margin-top: 14px; }
+.uc-grid {
+  display: grid; grid-template-columns: repeat(2,1fr); gap: 14px;
 }
-.mc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.mc-amber::after{background:var(--amber)}
-.mc-teal::after{background:var(--teal)}
-.mc-green::after{background:var(--green)}
-.mc-violet::after{background:var(--violet)}
-.mc:hover{border-color:var(--line2);transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,.3)}
-.mc-badge{
-  display:inline-block;font-family:var(--mono);font-size:10px;
-  font-weight:500;letter-spacing:.09em;text-transform:uppercase;
-  padding:3px 9px;border-radius:5px;margin-bottom:12px;
+@media (max-width: 560px) { .uc-grid { grid-template-columns: 1fr; } }
+.uc-card {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--r2); padding: 28px 26px;
+  position: relative; overflow: hidden;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
 }
-.ba{color:var(--amber);background:var(--ambg);border:1px solid var(--ambd)}
-.bt{color:var(--teal);background:var(--tbg);border:1px solid var(--tbd)}
-.bg{color:var(--green);background:var(--gbg);border:1px solid var(--gbd)}
-.bv{color:var(--violet);background:var(--vbg);border:1px solid var(--vbd)}
-.mc h3{font-family:var(--head);font-size:15px;font-weight:700;color:var(--bright);margin-bottom:8px;line-height:1.3}
-.mc p{font-size:13px;color:var(--dim);line-height:1.7}
-.mc-pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px}
-.mp{font-size:11.5px;font-weight:500;color:var(--mid);background:var(--bg2);border:1px solid var(--line2);padding:3px 9px;border-radius:5px}
+.uc-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.uc-card.c1::before { background: var(--amber); }
+.uc-card.c2::before { background: var(--navy); }
+.uc-card.c3::before { background: var(--green); }
+.uc-card.c4::before { background: #7c5cbf; }
+.uc-card:hover {
+  border-color: var(--border-2);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+.uc-icon {
+  width: 44px; height: 44px; border-radius: var(--r);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; margin-bottom: 16px;
+}
+.uc-icon.amber { background: var(--amber-lt); }
+.uc-icon.navy  { background: var(--navy-lt); }
+.uc-icon.green { background: var(--green-lt); }
+.uc-icon.purple { background: #f3f0ff; }
+.uc-card h3 {
+  font-family: var(--head); font-size: 17px; font-weight: 600;
+  color: var(--ink); margin-bottom: 8px; line-height: 1.3;
+}
+.uc-card p { font-size: 13.5px; color: var(--ink-dim); line-height: 1.7; }
+.uc-examples {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px;
+}
+.uc-ex {
+  font-family: var(--mono); font-size: 11px; color: var(--ink-dim);
+  background: var(--surface-2); border: 1px solid var(--border);
+  padding: 3px 9px; border-radius: 5px;
+}
 
-/* ══════════════════════════════════════
-   EXAMPLE LEAD
-══════════════════════════════════════ */
-#example{background:var(--card)}
-.example-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:64px;align-items:center}
-@media(max-width:800px){.example-grid{grid-template-columns:1fr;gap:40px}}
-.checkpoints{list-style:none;display:flex;flex-direction:column;gap:11px;margin-top:28px}
-.checkpoints li{display:flex;gap:11px;font-size:14px;color:var(--mid);line-height:1.5}
-.ck-dot{
-  width:19px;height:19px;border-radius:50%;flex-shrink:0;
-  background:var(--gbg);border:1px solid var(--gbd);
-  display:flex;align-items:center;justify-content:center;
-  font-size:10px;color:var(--green);font-weight:700;margin-top:2px;
+/* tailoring callout */
+.tailor-strip {
+  margin-top: 56px;
+  background: var(--navy);
+  border-radius: var(--r3); padding: 44px 52px;
+  display: grid; grid-template-columns: 1fr 1.2fr;
+  gap: 48px; align-items: center;
+}
+@media (max-width: 760px) { .tailor-strip { grid-template-columns: 1fr; padding: 36px 28px; gap: 28px; } }
+.ts-label {
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  color: rgba(255,255,255,.45); letter-spacing: .12em; text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.ts-head {
+  font-family: var(--head); font-size: clamp(22px,3vw,30px); font-weight: 600;
+  color: #fff; letter-spacing: -.3px; line-height: 1.2;
+}
+.ts-body { font-size: 15px; color: rgba(255,255,255,.6); line-height: 1.78; }
+.ts-points { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+.ts-point {
+  display: flex; align-items: flex-start; gap: 12px;
+  font-size: 14px; color: rgba(255,255,255,.75); line-height: 1.55;
+}
+.ts-check {
+  width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(200,134,10,.2); border: 1px solid rgba(200,134,10,.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: var(--amber-md); font-weight: 700; margin-top: 1px;
 }
 
-/* ── lead card ── */
-.lead-card{
-  background:var(--bg);border:1px solid var(--line2);
-  border-radius:14px;overflow:hidden;
-  box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.02);
+/* ────────────────────────────────────────────────
+   WHAT YOU RECEIVE
+──────────────────────────────────────────────── */
+#receive { padding: 100px 0; background: var(--surface); }
+.receive-grid {
+  display: grid; grid-template-columns: 1fr 1.1fr;
+  gap: 72px; align-items: center;
 }
-.lc-head{
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--card2);border-bottom:1px solid var(--line);
-  padding:14px 20px;
+@media (max-width: 860px) { .receive-grid { grid-template-columns: 1fr; gap: 48px; } }
+.receive-list { list-style: none; display: flex; flex-direction: column; gap: 16px; margin-top: 28px; }
+.rl-item { display: flex; gap: 14px; align-items: flex-start; }
+.rl-dot {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+  background: var(--navy-lt); border: 1.5px solid var(--navy-bdr);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: var(--navy); font-weight: 700; margin-top: 2px;
 }
-.lc-ref{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.04em}
-.lc-score{
-  font-family:var(--mono);font-size:12px;font-weight:700;color:var(--bg);
-  background:var(--green);padding:3px 11px;border-radius:100px;
-}
-.lc-body{padding:20px}
-.lc-title{font-family:var(--head);font-size:14.5px;font-weight:700;color:var(--bright);line-height:1.4;margin-bottom:4px}
-.lc-meta{font-family:var(--mono);font-size:11px;color:var(--dim);margin-bottom:18px}
-.lc-rows{border:1px solid var(--line);border-radius:8px;overflow:hidden}
-.lc-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);gap:14px}
-.lc-row:last-child{border-bottom:none}
-.rk{font-family:var(--mono);font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;flex-shrink:0}
-.rv{font-size:13px;color:var(--mid);text-align:right;line-height:1.4}
-.tags{display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end}
-.tag{font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:5px}
-.ta{background:var(--ambg);border:1px solid var(--ambd);color:var(--amber)}
-.tg{background:var(--gbg);border:1px solid var(--gbd);color:var(--green)}
-.lc-foot{
-  background:var(--card2);border-top:1px solid var(--line);
-  padding:13px 20px;display:flex;align-items:center;justify-content:space-between;gap:8px;
-}
-.lc-link{
-  font-family:var(--mono);font-size:11px;font-weight:600;color:var(--amber);
-  background:var(--ambg);border:1px solid var(--ambd);
-  padding:5px 13px;border-radius:6px;letter-spacing:.04em;
-  transition:background .18s;
-}
-.lc-link:hover{background:rgba(240,165,0,.18)}
-.lc-note{font-family:var(--mono);font-size:10px;color:var(--dim)}
+.rl-content {}
+.rl-title { font-weight: 600; color: var(--ink); font-size: 14.5px; margin-bottom: 2px; }
+.rl-desc { font-size: 13.5px; color: var(--ink-dim); line-height: 1.6; }
 
-/* ══════════════════════════════════════
-   COVERAGE
-══════════════════════════════════════ */
-#coverage{text-align:center}
-.cov-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:14px;text-align:left;margin-top:48px;margin-bottom:32px;
+/* ── Lead card (detailed) ── */
+.lead-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border-2);
+  border-radius: var(--r3);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
 }
-@media(max-width:700px){.cov-grid{grid-template-columns:1fr}}
-.cov-card{
-  background:var(--card);border:1px solid var(--line);
-  border-radius:var(--r2);padding:22px 20px;transition:border-color .2s;
+.lc-head {
+  background: var(--surface-2); border-bottom: 1px solid var(--border);
+  padding: 16px 22px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
 }
-.cov-card:hover{border-color:var(--line2)}
-.cov-head{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--amber);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;display:block}
-.cov-tags{display:flex;flex-wrap:wrap;gap:6px}
-.ct{
-  font-size:12px;font-weight:500;color:var(--mid);
-  background:var(--card2);border:1px solid var(--line);
-  padding:5px 11px;border-radius:6px;line-height:1;
-  transition:color .18s,border-color .18s;
+.lc-council {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 600; color: var(--ink);
 }
-.cov-card:hover .ct{color:var(--bright);border-color:var(--line2)}
-.custom-box{
-  display:inline-flex;align-items:flex-start;gap:13px;text-align:left;
-  background:var(--card);border:1px solid var(--line);border-left:3px solid var(--amber);
-  border-radius:var(--r2);padding:18px 22px;max-width:620px;
+.lc-council-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--amber);
 }
-.cb-txt{font-family:var(--body);font-size:14px;color:var(--mid);line-height:1.7}
-.cb-txt strong{font-family:var(--head);color:var(--bright);display:block;margin-bottom:4px;font-size:15px}
+.lc-score-wrap { display: flex; align-items: center; gap: 8px; }
+.lc-score {
+  font-family: var(--mono); font-size: 12px; font-weight: 500;
+  background: var(--navy); color: #fff;
+  padding: 4px 12px; border-radius: 100px;
+}
+.lc-decision {
+  font-family: var(--mono); font-size: 10px; font-weight: 500;
+  background: #fef2f2; color: #dc2626;
+  border: 1px solid #fecaca;
+  padding: 4px 10px; border-radius: 100px;
+}
+.lc-body { padding: 22px; }
+.lc-ref { font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint); margin-bottom: 6px; }
+.lc-title {
+  font-family: var(--head); font-size: 16px; font-weight: 600;
+  color: var(--ink); line-height: 1.4; margin-bottom: 4px;
+}
+.lc-address { font-size: 13px; color: var(--ink-dim); margin-bottom: 20px; display: flex; align-items: center; gap: 5px; }
+.lc-address svg { color: var(--ink-faint); flex-shrink: 0; }
+.lc-table { border: 1.5px solid var(--border); border-radius: var(--r2); overflow: hidden; }
+.lc-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 11px 16px; border-bottom: 1px solid var(--border); gap: 16px;
+}
+.lc-row:last-child { border-bottom: none; }
+.lc-key {
+  font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint);
+  text-transform: uppercase; letter-spacing: .08em; flex-shrink: 0;
+}
+.lc-val { font-size: 13px; color: var(--ink-mid); text-align: right; line-height: 1.4; }
+.lc-tags { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-end; }
+.lc-tag {
+  font-family: var(--mono); font-size: 10.5px;
+  padding: 3px 9px; border-radius: 5px; line-height: 1;
+}
+.tag-amber { background: var(--amber-lt); color: var(--amber); border: 1px solid var(--amber-bdr); }
+.tag-green { background: var(--green-lt); color: var(--green); border: 1px solid var(--green-bdr); }
+.tag-navy  { background: var(--navy-lt); color: var(--navy); border: 1px solid var(--navy-bdr); }
+.lc-footer {
+  background: var(--surface-2); border-top: 1px solid var(--border);
+  padding: 14px 22px; display: flex; justify-content: space-between; align-items: center;
+}
+.lc-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 600; color: var(--navy);
+  background: var(--navy-lt); border: 1.5px solid var(--navy-bdr);
+  padding: 7px 16px; border-radius: var(--r);
+  transition: background .15s;
+}
+.lc-link:hover { background: #dce8f5; }
+.lc-note { font-family: var(--mono); font-size: 10px; color: var(--ink-faint); }
 
-/* ══════════════════════════════════════
+/* GDPR note */
+.gdpr-note {
+  margin-top: 12px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12.5px; color: var(--ink-faint);
+  background: var(--surface-2); border: 1px solid var(--border);
+  padding: 10px 14px; border-radius: var(--r);
+}
+.gdpr-note svg { flex-shrink: 0; color: var(--ink-faint); }
+
+/* ────────────────────────────────────────────────
+   PRACTICE AREAS
+──────────────────────────────────────────────── */
+#coverage { padding: 100px 0; background: var(--surface-2); }
+.cov-intro {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; margin-bottom: 56px; align-items: start;
+}
+@media (max-width: 800px) { .cov-intro { grid-template-columns: 1fr; gap: 24px; } }
+.cov-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 12px;
+}
+@media (max-width: 720px) { .cov-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 460px) { .cov-grid { grid-template-columns: 1fr; } }
+.cov-card {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--r2); padding: 22px 20px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.cov-card:hover { border-color: var(--border-2); box-shadow: var(--shadow-sm); }
+.cov-icon { font-size: 22px; margin-bottom: 12px; }
+.cov-name {
+  font-family: var(--head); font-size: 14px; font-weight: 600;
+  color: var(--ink); margin-bottom: 12px; line-height: 1.3;
+}
+.cov-keywords { display: flex; flex-wrap: wrap; gap: 5px; }
+.kw {
+  font-family: var(--mono); font-size: 10.5px; color: var(--ink-dim);
+  background: var(--surface-2); border: 1px solid var(--border);
+  padding: 3px 9px; border-radius: 4px;
+  transition: color .15s, border-color .15s;
+}
+.cov-card:hover .kw { color: var(--ink); border-color: var(--border-2); }
+
+/* ────────────────────────────────────────────────
    TESTIMONIAL
-══════════════════════════════════════ */
-#testimonial{text-align:center;background:var(--bg1)}
-.testi-wrap{max-width:700px;margin:0 auto}
-.testi-stars{display:flex;gap:3px;justify-content:center;margin-bottom:24px}
-.testi-stars span{color:var(--amber);font-size:17px}
-.testi-mark{font-size:56px;line-height:1;color:var(--amber);opacity:.18;font-family:Georgia,serif;display:block;margin-bottom:18px}
-.testi-q{font-family:var(--body);font-size:clamp(16px,2.2vw,20px);font-weight:400;font-style:italic;color:var(--bright);line-height:1.72;margin-bottom:28px}
-.testi-attr{display:flex;align-items:center;justify-content:center;gap:12px}
-.testi-av{
-  width:42px;height:42px;border-radius:50%;flex-shrink:0;
-  background:linear-gradient(135deg,var(--amber),#c97d00);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--head);font-size:16px;font-weight:800;color:var(--bg);
+──────────────────────────────────────────────── */
+#testimonial { padding: 100px 0; background: var(--surface); }
+.testi-inner { max-width: 780px; margin: 0 auto; text-align: center; }
+.testi-stars { display: flex; gap: 4px; justify-content: center; margin-bottom: 28px; }
+.testi-stars span { color: var(--amber); font-size: 18px; }
+.testi-quote {
+  font-family: var(--head); font-style: italic;
+  font-size: clamp(18px,2.5vw,24px); font-weight: 400;
+  color: var(--ink); line-height: 1.65;
+  margin-bottom: 36px;
 }
-.testi-name{font-family:var(--head);font-size:15px;font-weight:700;color:var(--bright);text-align:left}
-.testi-role{font-family:var(--mono);font-size:11px;color:var(--dim);text-align:left;letter-spacing:.04em;margin-top:2px}
+.testi-quote::before { content: '\201C'; }
+.testi-quote::after  { content: '\201D'; }
+.testi-attr { display: flex; align-items: center; justify-content: center; gap: 14px; }
+.testi-av {
+  width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--amber), #9a6200);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--head); font-size: 18px; font-weight: 600; color: #fff;
+}
+.testi-name {
+  font-family: var(--head); font-size: 16px; font-weight: 600;
+  color: var(--ink); text-align: left;
+}
+.testi-role {
+  font-family: var(--mono); font-size: 11px; color: var(--ink-faint);
+  text-align: left; letter-spacing: .05em; margin-top: 3px;
+}
 
-/* ══════════════════════════════════════
+/* ────────────────────────────────────────────────
    PRICING
-══════════════════════════════════════ */
-#pricing{text-align:center}
-.trial-banner{
-  display:inline-flex;align-items:center;gap:8px;
-  background:var(--gbg);border:1px solid var(--gbd);
-  border-radius:100px;padding:7px 18px;margin-bottom:44px;
-  font-family:var(--mono);font-size:12px;color:var(--green);letter-spacing:.05em;
+──────────────────────────────────────────────── */
+#pricing { padding: 100px 0; background: var(--surface-2); }
+.pricing-layout {
+  display: grid; grid-template-columns: 1fr 1.1fr;
+  gap: 72px; align-items: start;
 }
-.trial-banner svg{flex-shrink:0}
-.price-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:14px;text-align:left;margin-bottom:20px;
+@media (max-width: 860px) { .pricing-layout { grid-template-columns: 1fr; gap: 48px; } }
+.pricing-copy {}
+.pricing-copy h2 { margin-bottom: 14px; }
+.pricing-copy .lead { margin-bottom: 28px; }
+.trial-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 12px; color: var(--green);
+  background: var(--green-lt); border: 1px solid var(--green-bdr);
+  padding: 7px 16px; border-radius: 100px; margin-bottom: 28px;
 }
-@media(max-width:750px){.price-grid{grid-template-columns:1fr;max-width:420px;margin-left:auto;margin-right:auto;margin-bottom:20px}}
-.pc{
-  background:var(--card);border:1px solid var(--line);
-  border-radius:var(--r2);overflow:hidden;
-  transition:transform .2s var(--ease),box-shadow .2s var(--ease);
-  position:relative;
+.trial-pill svg { flex-shrink: 0; }
+.pricing-card {
+  background: var(--surface); border: 2px solid var(--navy);
+  border-radius: var(--r3); overflow: hidden;
+  box-shadow: var(--shadow-lg);
 }
-.pc:hover{transform:translateY(-3px);box-shadow:0 16px 44px rgba(0,0,0,.4)}
-.pc.hot{border-color:var(--amber)}
-.pc-badge{
-  background:var(--amber);color:var(--bg);
-  font-family:var(--mono);font-size:10px;font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;text-align:center;padding:5px;
+.pc-top { background: var(--navy); padding: 36px 36px 32px; }
+.pc-plan {
+  font-family: var(--mono); font-size: 11px;
+  color: rgba(255,255,255,.5); letter-spacing: .13em; text-transform: uppercase;
+  margin-bottom: 16px;
 }
-.pc-top{background:var(--card2);padding:24px 22px 18px}
-.pc.hot .pc-top{padding-top:22px}
-.pc-name{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.13em;text-transform:uppercase;margin-bottom:12px}
-.pc-price{font-family:var(--head);font-size:46px;font-weight:800;color:var(--white);letter-spacing:-1px;line-height:1}
-.pc-price sup{font-size:20px;font-weight:500;vertical-align:super;letter-spacing:0}
-.pc-mo{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:5px;letter-spacing:.04em}
-.pc-trial{
-  display:inline-flex;align-items:center;gap:6px;
-  font-family:var(--mono);font-size:10.5px;font-weight:500;
-  color:var(--green);background:var(--gbg);border:1px solid var(--gbd);
-  padding:4px 10px;border-radius:5px;margin-top:10px;letter-spacing:.04em;
+.pc-price {
+  font-family: var(--head); font-size: 56px; font-weight: 600;
+  color: #fff; letter-spacing: -1.5px; line-height: 1;
 }
-.pc-body{padding:18px 22px 22px}
-.pc-blurb{font-size:13.5px;color:var(--dim);font-style:italic;line-height:1.55;margin-bottom:16px}
-.pc-feats{list-style:none;display:flex;flex-direction:column}
-.pc-feats li{font-size:13px;color:var(--mid);padding:8px 0;border-bottom:1px solid var(--line);display:flex;gap:9px;align-items:flex-start;line-height:1.45}
-.pc-feats li:last-child{border-bottom:none}
-.ck{color:var(--green);font-weight:700;font-size:12px;flex-shrink:0;margin-top:1px}
-.pc-cta{
-  display:block;width:100%;margin-top:18px;padding:11px;
-  font-family:var(--body);font-size:14px;font-weight:600;
-  text-align:center;border-radius:8px;cursor:pointer;
-  transition:all .18s var(--ease);text-decoration:none;border:none;
+.pc-price sup { font-size: 24px; font-weight: 400; vertical-align: super; letter-spacing: 0; }
+.pc-cycle { font-size: 14px; color: rgba(255,255,255,.5); margin-top: 8px; }
+.pc-trial-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  color: var(--amber-md); background: rgba(200,134,10,.15);
+  border: 1px solid rgba(200,134,10,.3);
+  padding: 5px 12px; border-radius: 100px; margin-top: 16px;
 }
-.cta-fill{background:var(--amber);color:var(--bg)}
-.cta-fill:hover{background:#f5b83a;box-shadow:0 6px 20px rgba(240,165,0,.22)}
-.cta-out{background:transparent;color:var(--mid);border:1px solid var(--line2)}
-.cta-out:hover{border-color:var(--mid);color:var(--bright)}
-.price-note{font-family:var(--mono);font-size:11.5px;color:var(--dim);letter-spacing:.04em;margin-top:16px;line-height:1.9}
+.pc-body { padding: 32px 36px 36px; }
+.pc-blurb { font-size: 14px; color: var(--ink-dim); font-style: italic; line-height: 1.6; margin-bottom: 24px; }
+.pc-feats { list-style: none; display: flex; flex-direction: column; }
+.pc-feat {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 11px 0; border-bottom: 1px solid var(--border);
+  font-size: 14px; color: var(--ink-mid); line-height: 1.45;
+}
+.pc-feat:last-child { border-bottom: none; }
+.feat-ck {
+  width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+  background: var(--navy-lt); border: 1px solid var(--navy-bdr);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: var(--navy); font-weight: 700; margin-top: 1px;
+}
+.pc-cta {
+  display: block; width: 100%; margin-top: 28px;
+  font-family: var(--body); font-size: 15px; font-weight: 600;
+  color: #fff; background: var(--navy); text-align: center;
+  padding: 14px; border-radius: var(--r2); border: none; cursor: pointer;
+  transition: background .18s, box-shadow .18s;
+  box-shadow: 0 4px 16px rgba(30,58,95,.25);
+}
+.pc-cta:hover { background: #162e4d; box-shadow: 0 8px 24px rgba(30,58,95,.28); }
+.pc-note {
+  text-align: center; margin-top: 14px;
+  font-family: var(--mono); font-size: 11px; color: var(--ink-faint);
+  line-height: 1.7;
+}
 
-/* ══════════════════════════════════════
+/* ────────────────────────────────────────────────
    FAQ
-══════════════════════════════════════ */
-#faq{background:var(--bg1)}
-.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:48px}
-@media(max-width:700px){.faq-grid{grid-template-columns:1fr}}
-.faq-item{
-  background:var(--card);border:1px solid var(--line);
-  border-radius:var(--r2);overflow:hidden;
+──────────────────────────────────────────────── */
+#faq { padding: 100px 0; background: var(--surface); }
+.faq-layout {
+  display: grid; grid-template-columns: 1fr 2fr;
+  gap: 80px; align-items: start;
 }
-.faq-q{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:18px 20px;cursor:pointer;gap:14px;
-  transition:background .18s;
+@media (max-width: 800px) { .faq-layout { grid-template-columns: 1fr; gap: 40px; } }
+.faq-intro .lead { margin-top: 14px; }
+.faq-list { display: flex; flex-direction: column; gap: 0; }
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-item:first-child { border-top: 1px solid var(--border); }
+.faq-q {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 0; cursor: pointer; gap: 20px;
+  transition: color .15s;
 }
-.faq-q:hover{background:var(--card2)}
-.faq-q-txt{font-family:var(--head);font-size:14.5px;font-weight:700;color:var(--bright);line-height:1.4}
-.faq-ch{font-size:13px;color:var(--dim);flex-shrink:0;transition:transform .3s var(--ease),color .18s}
-.faq-item.open .faq-ch{transform:rotate(180deg);color:var(--amber)}
-.faq-a{max-height:0;overflow:hidden;padding:0 20px;transition:max-height .32s ease,padding .3s ease}
-.faq-item.open .faq-a{max-height:220px;padding:0 20px 18px}
-.faq-a p{font-size:13.5px;color:var(--dim);line-height:1.75}
+.faq-q:hover .faq-q-txt { color: var(--ink); }
+.faq-q-txt {
+  font-family: var(--head); font-size: 16px; font-weight: 600;
+  color: var(--ink-mid); line-height: 1.4;
+  transition: color .15s;
+}
+.faq-item.open .faq-q-txt { color: var(--ink); }
+.faq-icon {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+  background: var(--surface-2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; color: var(--ink-dim);
+  transition: background .2s, transform .3s;
+}
+.faq-item.open .faq-icon {
+  background: var(--navy); color: #fff; border-color: var(--navy);
+  transform: rotate(180deg);
+}
+.faq-a {
+  max-height: 0; overflow: hidden;
+  transition: max-height .35s ease, padding .3s ease;
+  padding: 0;
+}
+.faq-item.open .faq-a { max-height: 300px; padding-bottom: 20px; }
+.faq-a p { font-size: 14px; color: var(--ink-dim); line-height: 1.78; }
 
-/* ══════════════════════════════════════
+/* ────────────────────────────────────────────────
    CTA
-══════════════════════════════════════ */
-#cta{text-align:center;padding:104px 0;position:relative;overflow:hidden}
-#cta::before{
-  content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  width:700px;height:380px;border-radius:50%;
-  background:radial-gradient(ellipse,rgba(240,165,0,.055) 0%,transparent 70%);
-  pointer-events:none;
+──────────────────────────────────────────────── */
+#cta {
+  padding: 100px 0;
+  background: linear-gradient(135deg, var(--navy) 0%, #1a3a6e 100%);
+  position: relative; overflow: hidden;
 }
-.cta-inner{max-width:500px;margin:0 auto;position:relative}
-.cta-h{font-family:var(--head);font-size:clamp(28px,4vw,42px);font-weight:800;color:var(--white);letter-spacing:-.5px;line-height:1.14;margin-bottom:14px}
-.cta-sub{font-family:var(--body);font-size:16px;color:var(--dim);line-height:1.78;margin-bottom:32px}
-.email-row{
-  display:flex;background:var(--card);border:1px solid var(--line2);
-  border-radius:10px;overflow:hidden;
-  transition:border-color .2s,box-shadow .2s;
+#cta::before {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(circle, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
-.email-row:focus-within{border-color:var(--amber);box-shadow:0 0 0 3px var(--ambg)}
-.email-in{
-  flex:1;background:transparent;border:none;outline:none;
-  padding:13px 16px;font-family:var(--body);font-size:14px;color:var(--bright);
+.cta-inner { max-width: 580px; margin: 0 auto; text-align: center; position: relative; }
+.cta-eyebrow {
+  font-family: var(--mono); font-size: 11px; color: var(--amber-md);
+  letter-spacing: .12em; text-transform: uppercase; margin-bottom: 20px;
 }
-.email-in::placeholder{color:var(--dim)}
-.email-btn{
-  font-family:var(--body);font-size:13px;font-weight:600;color:var(--bg);
-  background:var(--amber);border:none;padding:13px 20px;
-  cursor:pointer;flex-shrink:0;white-space:nowrap;transition:background .18s;
+.cta-h {
+  font-family: var(--head);
+  font-size: clamp(28px,4.5vw,44px);
+  font-weight: 600; color: #fff; letter-spacing: -.5px;
+  line-height: 1.12; margin-bottom: 16px;
 }
-.email-btn:hover{background:#f5b83a}
-.email-note{margin-top:12px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.04em}
-#msg{min-height:18px;margin-top:10px;font-family:var(--mono);font-size:12px;letter-spacing:.03em}
+.cta-sub {
+  font-size: 17px; color: rgba(255,255,255,.65); line-height: 1.75;
+  margin-bottom: 40px;
+}
+.email-form {
+  background: rgba(255,255,255,.08); border: 1.5px solid rgba(255,255,255,.2);
+  border-radius: var(--r2); overflow: hidden; display: flex;
+  backdrop-filter: blur(10px);
+  transition: border-color .2s, box-shadow .2s;
+}
+.email-form:focus-within {
+  border-color: rgba(255,255,255,.45);
+  box-shadow: 0 0 0 4px rgba(255,255,255,.06);
+}
+.email-in {
+  flex: 1; background: transparent; border: none; outline: none;
+  padding: 15px 18px; font-family: var(--body); font-size: 14.5px;
+  color: #fff;
+}
+.email-in::placeholder { color: rgba(255,255,255,.4); }
+.email-btn {
+  font-family: var(--body); font-size: 14px; font-weight: 600;
+  color: var(--navy); background: #fff;
+  border: none; padding: 15px 26px; cursor: pointer;
+  flex-shrink: 0; white-space: nowrap;
+  transition: background .18s;
+}
+.email-btn:hover { background: var(--amber-lt); }
+.email-note { margin-top: 14px; font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,.4); letter-spacing: .04em; }
+#msg { min-height: 20px; margin-top: 12px; font-family: var(--mono); font-size: 12px; }
 
-/* ══════════════════════════════════════
+/* ────────────────────────────────────────────────
    FOOTER
-══════════════════════════════════════ */
-footer{background:var(--bg1);border-top:1px solid var(--line);padding:28px 0}
-.foot-inner{
-  max-width:1060px;margin:0 auto;padding:0 32px;
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+──────────────────────────────────────────────── */
+footer {
+  background: var(--ink); padding: 32px 0;
 }
-.foot-copy{font-family:var(--mono);font-size:12px;color:var(--dim)}
-.foot-links{display:flex;gap:18px}
-.foot-links a{font-family:var(--mono);font-size:12px;color:var(--dim);transition:color .15s}
-.foot-links a:hover{color:var(--bright)}
-.foot-brand{font-family:var(--mono);font-size:12px;color:var(--dim)}
-.foot-brand strong{color:var(--amber)}
+.foot-inner {
+  max-width: 1080px; margin: 0 auto; padding: 0 36px;
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
+.foot-logo { display: flex; align-items: center; gap: 9px; }
+.foot-logo-mark {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: rgba(255,255,255,.1);
+  display: flex; align-items: center; justify-content: center;
+}
+.foot-logo-txt {
+  font-family: var(--head); font-size: 15px; font-weight: 600;
+  color: rgba(255,255,255,.8);
+}
+.foot-logo-txt span { color: var(--amber); }
+.foot-links { display: flex; gap: 20px; align-items: center; }
+.foot-links a {
+  font-family: var(--mono); font-size: 12px;
+  color: rgba(255,255,255,.4);
+  transition: color .15s;
+}
+.foot-links a:hover { color: rgba(255,255,255,.8); }
+.foot-copy {
+  font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,.3);
+}
 
-/* ══════════════════════════════════════
-   SCROLL REVEAL
-══════════════════════════════════════ */
-.r{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
-.r.v{opacity:1;transform:none}
-.d1{transition-delay:.08s}
-.d2{transition-delay:.16s}
-.d3{transition-delay:.24s}
-.d4{transition-delay:.32s}
+/* ────────────────────────────────────────────────
+   REVEAL
+──────────────────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.d1 { transition-delay: .08s; }
+.reveal.d2 { transition-delay: .16s; }
+.reveal.d3 { transition-delay: .24s; }
+.reveal.d4 { transition-delay: .32s; }
+.reveal.vis { opacity: 1; transform: none; }
 
-@media(max-width:500px){
-  h1{letter-spacing:-1.5px}
-  section{padding:72px 0}
-  .btn-fill,.btn-ghost{padding:12px 20px;font-size:14px}
-  .email-row{flex-direction:column;border-radius:9px}
-  .email-btn{padding:13px}
+/* ────────────────────────────────────────────────
+   MOBILE
+──────────────────────────────────────────────── */
+@media (max-width: 500px) {
+  h1 { letter-spacing: -1px; }
+  .hero-strip { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .email-form { flex-direction: column; border-radius: var(--r); }
+  .email-btn { padding: 13px; }
+  .pricing-card { border-radius: var(--r2); }
+  .pc-top, .pc-body { padding: 24px 22px; }
+  .how-step { padding: 30px 24px; }
+  .tailor-strip { border-radius: var(--r2); }
+  .faq-layout { gap: 28px; }
 }
 </style>
 </head>
 <body>
 
-<!-- ═══ NAV ═══ -->
+<!-- ════ NAV ════ -->
 <nav id="nav">
   <div class="nav-inner">
     <a href="#" class="logo">
-      <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
-        <rect x="1" y="10" width="10" height="13" rx="5" fill="#f0a500"/>
-        <rect x="19" y="10" width="10" height="13" rx="5" fill="#f0a500"/>
-        <path d="M11 14.5 Q15 13 19 14.5" stroke="#c97d00" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-        <circle cx="6" cy="16.5" r="3.2" fill="#090c14" opacity=".55"/>
-        <circle cx="24" cy="16.5" r="3.2" fill="#090c14" opacity=".55"/>
-        <line x1="6" y1="14.2" x2="6" y2="18.8" stroke="#f0a500" stroke-width=".8" opacity=".9"/>
-        <line x1="3.7" y1="16.5" x2="8.3" y2="16.5" stroke="#f0a500" stroke-width=".8" opacity=".9"/>
-        <line x1="24" y1="14.2" x2="24" y2="18.8" stroke="#f0a500" stroke-width=".8" opacity=".9"/>
-        <line x1="21.7" y1="16.5" x2="26.3" y2="16.5" stroke="#f0a500" stroke-width=".8" opacity=".9"/>
-        <circle cx="4.5" cy="14.8" r=".9" fill="white" opacity=".35"/>
-        <circle cx="22.5" cy="14.8" r=".9" fill="white" opacity=".35"/>
-      </svg>
+      <div class="logo-mark">
+        <!-- binoculars SVG, clean and professional -->
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- left barrel -->
+          <path d="M2 9C2 7.34315 3.34315 6 5 6H7V16H5C3.34315 16 2 14.6569 2 13V9Z" fill="#f0a500" opacity=".9"/>
+          <!-- right barrel -->
+          <path d="M20 9C20 7.34315 18.6569 6 17 6H15V16H17C18.6569 16 20 14.6569 20 13V9Z" fill="#f0a500" opacity=".9"/>
+          <!-- bridge -->
+          <path d="M7 10.5C8.5 9.5 10 9 11 9C12 9 13.5 9.5 15 10.5" stroke="#f0a500" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
+          <!-- left lens -->
+          <circle cx="5" cy="11" r="2.4" fill="rgba(0,0,0,.5)"/>
+          <!-- right lens -->
+          <circle cx="17" cy="11" r="2.4" fill="rgba(0,0,0,.5)"/>
+          <!-- crosshairs left -->
+          <line x1="5" y1="9.2" x2="5" y2="12.8" stroke="white" stroke-width=".7" opacity=".7"/>
+          <line x1="3.2" y1="11" x2="6.8" y2="11" stroke="white" stroke-width=".7" opacity=".7"/>
+          <!-- crosshairs right -->
+          <line x1="17" y1="9.2" x2="17" y2="12.8" stroke="white" stroke-width=".7" opacity=".7"/>
+          <line x1="15.2" y1="11" x2="18.8" y2="11" stroke="white" stroke-width=".7" opacity=".7"/>
+        </svg>
+      </div>
       <span class="logo-txt">Planning<span>Scout</span></span>
     </a>
     <ul class="nav-links">
       <li><a href="#how">How it works</a></li>
-      <li><a href="#monitor">Use cases</a></li>
-      <li><a href="#example">Example</a></li>
+      <li><a href="#usecases">Use cases</a></li>
+      <li><a href="#receive">What you receive</a></li>
       <li><a href="#pricing">Pricing</a></li>
       <li><a href="#faq">FAQ</a></li>
     </ul>
-    <a href="#cta" class="nav-cta">Try Free →</a>
+    <div class="nav-cta">
+      <a href="#cta" class="btn-outline-nav">See sample</a>
+      <a href="#cta" class="btn-primary">Try free →</a>
+    </div>
   </div>
 </nav>
 
 
-<!-- ═══ HERO ═══ -->
+<!-- ════ HERO ════ -->
 <section id="hero">
-  <div class="grid-bg"></div>
-  <div class="wrap" style="position:relative;z-index:1">
-    <div class="live-pill r">
-      <span class="pdot"></span>
-      50+ UK Councils · Updated Weekly
+  <div class="wrap">
+    <div class="hero-content">
+
+      <div class="hero-text">
+        <div class="hero-badge reveal">
+          <span class="badge-dot"></span>
+          44+ UK Councils · Every week
+        </div>
+        <h1 class="reveal d1">
+          The planning<br>
+          leads your<br>
+          competitors<br>
+          <em>miss every week.</em>
+        </h1>
+        <p class="hero-sub reveal d2">
+          PlanningScout scans 44+ UK council portals every week, reads every decision notice and application document, and delivers a pre-scored shortlist of opportunities that match your exact practice — approved applications, refused ones, and everything in between.
+        </p>
+        <div class="hero-actions reveal d3">
+          <a href="#cta" class="btn-hero">Start free — no card needed</a>
+          <a href="#receive" class="btn-hero-ghost">See a sample lead ↓</a>
+        </div>
+        <div class="hero-proof reveal d4">
+          <div class="proof-item">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.3" stroke="currentColor" stroke-width="1.2"/><path d="M4.2 7l2 2 3.6-3.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            1 month free
+          </div>
+          <div class="proof-item">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.3" stroke="currentColor" stroke-width="1.2"/><path d="M4.2 7l2 2 3.6-3.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            No card required
+          </div>
+          <div class="proof-item">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.3" stroke="currentColor" stroke-width="1.2"/><path d="M4.2 7l2 2 3.6-3.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Cancel anytime
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard mock -->
+      <div class="hero-visual reveal d2">
+        <div class="hero-screen">
+          <div class="hs-bar">
+            <div class="hs-dots">
+              <div class="hs-dot r"></div>
+              <div class="hs-dot y"></div>
+              <div class="hs-dot g"></div>
+            </div>
+            <div class="hs-url">planningscout.com · Weekly Digest · w/c 10 Mar 2026</div>
+          </div>
+          <div class="hs-content">
+            <div class="hs-header">
+              <span class="hs-title">Your leads this week — 8 matches</span>
+              <span class="hs-week">Tameside, Manchester, Leeds…</span>
+            </div>
+
+            <div class="hs-lead">
+              <span class="hs-lead-score high">94</span>
+              <div class="hs-lead-body">
+                <div class="hs-lead-ref">25/01023/FUL · Tameside MBC</div>
+                <div class="hs-lead-title">Change of use: C3 → Hair &amp; Beauty Salon (Class E) — Ashton-under-Lyne</div>
+                <div class="hs-lead-tags">
+                  <span class="hs-tag amber">Out of centre</span>
+                  <span class="hs-tag amber">Sequential test</span>
+                  <span class="hs-tag green">Lack of evidence</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="hs-lead">
+              <span class="hs-lead-score high">88</span>
+              <div class="hs-lead-body">
+                <div class="hs-lead-ref">25/00622/FUL · Tameside MBC</div>
+                <div class="hs-lead-title">Change of use: F2 → Community Wellbeing Centre incl. Gym (Class E) — Stalybridge</div>
+                <div class="hs-lead-tags">
+                  <span class="hs-tag amber">Sequential test</span>
+                  <span class="hs-tag amber">Out-of-centre</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="hs-lead">
+              <span class="hs-lead-score mid">76</span>
+              <div class="hs-lead-body">
+                <div class="hs-lead-ref">25/03410/FUL · Manchester City Council</div>
+                <div class="hs-lead-title">Change of use: A3 → Café (Class E) — Northern Quarter</div>
+                <div class="hs-lead-tags">
+                  <span class="hs-tag amber">Lack of evidence</span>
+                  <span class="hs-tag navy">Class E</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="hs-footer">
+              <span>↗ View all 8 leads in Google Sheet</span>
+              <span>Generated Mon 10 Mar 2026, 07:02</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-float">
+          <div class="hf-icon">📬</div>
+          <div class="hf-text">
+            <div class="hf-num">Every Monday</div>
+            <div class="hf-label">In your inbox, ready to act on</div>
+          </div>
+        </div>
+      </div>
     </div>
-    <h1 class="r d1">
-      Find your next<br>
-      instruction, <em>automatically.</em>
-    </h1>
-    <p class="hero-sub r d2">
-      PlanningScout monitors UK planning portals every week, scores every relevant application against your brief, and delivers the best opportunities to your inbox — so you focus on winning work, not hunting for it.
-    </p>
-    <div class="hero-btns r d3">
-      <a href="#cta" class="btn-fill">Try free for 1 month →</a>
-      <a href="#example" class="btn-ghost">See an example ↓</a>
-    </div>
-    <div class="trust-bar r d4">
-      <span class="ti">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.3" stroke="#22c55e" stroke-width="1.2"/><path d="M4.2 7l2 2 3.6-3.6" stroke="#22c55e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        100% public data
-      </span>
-      <span class="tsep"></span>
-      <span class="ti">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.3" stroke="#22c55e" stroke-width="1.2"/><path d="M4.2 7l2 2 3.6-3.6" stroke="#22c55e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        No card required to start
-      </span>
-      <span class="tsep"></span>
-      <span class="ti">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.3" stroke="#22c55e" stroke-width="1.2"/><path d="M4.2 7l2 2 3.6-3.6" stroke="#22c55e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Tailored to your practice
-      </span>
-      <span class="tsep"></span>
-      <span class="ti">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.3" stroke="#22c55e" stroke-width="1.2"/><path d="M4.2 7l2 2 3.6-3.6" stroke="#22c55e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Cancel anytime
-      </span>
+
+    <div class="hero-strip reveal">
+      <span class="strip-label">Practice areas monitored</span>
+      <div class="strip-tags">
+        <span class="strip-tag">Retail &amp; Class E</span>
+        <span class="strip-tag">Residential</span>
+        <span class="strip-tag">Transport</span>
+        <span class="strip-tag">Industrial &amp; B-Use</span>
+        <span class="strip-tag">Prior Approvals</span>
+        <span class="strip-tag">Heritage</span>
+        <span class="strip-tag">Green Belt</span>
+      </div>
     </div>
   </div>
 </section>
 
 
-<!-- ═══ STATS BAR ═══ -->
+<!-- ════ STATS ════ -->
 <section id="stats">
   <div class="wrap">
-    <div class="stats-row">
-      <div class="stat r"><div class="stat-n">78<span>+</span></div><div class="stat-l">Councils covered</div></div>
-      <div class="stat r d1"><div class="stat-n">Weekly</div><div class="stat-l">Automated scans</div></div>
-      <div class="stat r d2"><div class="stat-n">100<span>pt</span></div><div class="stat-l">Lead scoring</div></div>
-      <div class="stat r d3"><div class="stat-n">8–15<span>×</span></div><div class="stat-l">More leads found</div></div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ═══ HOW IT WORKS ═══ -->
-<section id="how" style="text-align:center">
-  <div class="wrap">
-    <span class="eyebrow r">How it works</span>
-    <h2 class="r d1">Three steps. Zero manual searching.</h2>
-    <p class="subtext r d2" style="margin:0 auto 0">We handle the monitoring, reading, and scoring. You make the calls.</p>
-    <div class="steps">
-      <div class="step r">
-        <span class="step-n">01</span>
-        <span class="step-icon">🔍</span>
-        <h3>We scan 50+ UK planning portals</h3>
-        <p>Every application matching your brief — across Greater Manchester, West Yorkshire, London, South East, Midlands and more — swept automatically every week.</p>
+    <div class="stats-inner">
+      <div class="stat-cell reveal">
+        <div class="stat-num">44<em>+</em></div>
+        <div class="stat-label">UK councils scanned</div>
       </div>
-      <div class="step r d1">
-        <span class="step-n">02</span>
-        <span class="step-icon">📊</span>
-        <h3>Each application is matched to your monitoring brief</h3>
-        <p>We analyse every application against the signals you care about — whether that's winnable appeal grounds, new major applications, prior approvals, or specific site activity. Your criteria, your signals.</p>
+      <div class="stat-cell reveal d1">
+        <div class="stat-num">Weekly</div>
+        <div class="stat-label">Automated sweeps</div>
       </div>
-      <div class="step r d2">
-        <span class="step-n">03</span>
-        <span class="step-icon">📬</span>
-        <h3>Top matches arrive every Monday morning</h3>
-        <p>A ranked digest of the week's best opportunities — scored, pre-qualified, with direct portal links and applicant intel. Nothing to search, nothing to open.</p>
+      <div class="stat-cell reveal d2">
+        <div class="stat-num">0–100</div>
+        <div class="stat-label">Lead scoring system</div>
+      </div>
+      <div class="stat-cell reveal d3">
+        <div class="stat-num">8–15<em>×</em></div>
+        <div class="stat-label">More leads than manual search</div>
       </div>
     </div>
   </div>
 </section>
 
 
-<!-- ═══ MONITORING USE CASES ═══ -->
-<section id="monitor">
+<!-- ════ HOW IT WORKS ════ -->
+<section id="how">
   <div class="wrap">
-    <div class="monitor-layout">
+    <div style="text-align:center;max-width:620px;margin:0 auto;">
+      <span class="eyebrow reveal">How it works</span>
+      <h2 class="reveal d1">Three steps.<br>Zero manual searching.</h2>
+      <p class="lead reveal d2" style="margin:0 auto;">We do the monitoring, reading, and scoring. You focus on making the calls and winning the work.</p>
+    </div>
+    <div class="how-grid">
+      <div class="how-step reveal">
+        <span class="step-num">Step 01</span>
+        <div class="step-illu navy">
+          <!-- scan icon -->
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="3" y="3" width="9" height="9" rx="2" stroke="#1e3a5f" stroke-width="1.8"/><rect x="14" y="3" width="9" height="9" rx="2" stroke="#1e3a5f" stroke-width="1.8"/><rect x="3" y="14" width="9" height="9" rx="2" stroke="#1e3a5f" stroke-width="1.8"/><circle cx="18.5" cy="18.5" r="3.5" stroke="#1e3a5f" stroke-width="1.8"/><line x1="21" y1="21" x2="23" y2="23" stroke="#1e3a5f" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </div>
+        <h3>We scan 44+ UK planning portals</h3>
+        <p>Every week, PlanningScout automatically searches the planning registers of 44+ UK councils — covering Greater Manchester, West Yorkshire, London, the South East, Midlands and more. Every application that could match your brief is captured and processed.</p>
+      </div>
+      <div class="how-step reveal d1">
+        <span class="step-num">Step 02</span>
+        <div class="step-illu amber">
+          <!-- document-read icon -->
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="4" y="2" width="14" height="18" rx="2" stroke="#c8860a" stroke-width="1.8"/><line x1="7" y1="7" x2="15" y2="7" stroke="#c8860a" stroke-width="1.5" stroke-linecap="round"/><line x1="7" y1="11" x2="15" y2="11" stroke="#c8860a" stroke-width="1.5" stroke-linecap="round"/><line x1="7" y1="15" x2="11" y2="15" stroke="#c8860a" stroke-width="1.5" stroke-linecap="round"/><circle cx="19" cy="19" r="4" stroke="#c8860a" stroke-width="1.8"/><line x1="22" y1="22" x2="24" y2="24" stroke="#c8860a" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </div>
+        <h3>We read every decision notice and relevant document</h3>
+        <p>For each application, PlanningScout opens the decision notice and any other relevant documents — then scans for the exact trigger phrases, keywords, and signals that define a good lead for your practice. Refused applications, approved ones, or both. Whatever your brief says.</p>
+      </div>
+      <div class="how-step reveal d2">
+        <span class="step-num">Step 03</span>
+        <div class="step-illu green">
+          <!-- inbox icon -->
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="2" y="6" width="22" height="16" rx="2" stroke="#16a34a" stroke-width="1.8"/><path d="M2 10l11 7 11-7" stroke="#16a34a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Your shortlist arrives every Monday</h3>
+        <p>A scored, ranked digest of that week's best matches — with application reference, location, use class, description, and the trigger phrases found. Direct link to the council portal. Ready on your desk at the start of the working week.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════ USE CASES ════ -->
+<section id="usecases">
+  <div class="wrap">
+    <div class="uc-header">
       <div>
-        <span class="eyebrow r">Use cases</span>
-        <h2 class="r d1">Tailored for you<br>Any planning signal.</h2>
-        <p class="subtext r d2">
-          Different consultancies need different intelligence. PlanningScout is configured around your practice — whether you're hunting appeal leads, building an instruction pipeline, tracking prior approvals, or monitoring market activity.
-        </p>
-        <p class="r d3" style="font-size:14px;color:var(--dim);margin-top:16px;line-height:1.78">
-          During onboarding we set up your monitoring brief together — the use classes, decision types, trigger phrases, and councils that match exactly what you do.
+        <span class="eyebrow reveal">Use cases</span>
+        <h2 class="reveal d1">Approved applications.<br>Refused applications.<br>Built around your practice.</h2>
+      </div>
+      <div class="reveal d2">
+        <p class="uc-desc">
+          <p>PlanningScout monitors the full planning register — not just refusals, not just approvals. Whether you're looking for appeals to win, new major applications that need a specialist consultant, prior approval opportunities, or market intelligence on a particular area — the system is configured around what <strong style="color:var(--ink)">you</strong> actually need.</p>
+          <p style="margin-top:14px">After an onboarding call where we understand exactly how your practice finds work today, we configure your monitoring brief precisely — the councils, keywords, decision types, trigger phrases, and scoring thresholds that define a qualified lead for you.</p>
         </p>
       </div>
-      <div class="monitor-cards">
-        <div class="mc mc-amber r">
-          <span class="mc-badge ba">Appeal leads</span>
-          <h3>Refused applications with winnable grounds</h3>
-          <p>Sequential test failures, lack of evidence, out-of-centre refusals — cases a consultant can turn around on appeal.</p>
-          <div class="mc-pills">
-            <span class="mp">Retail / Class E</span>
-            <span class="mp">Residential</span>
-            <span class="mp">Industrial</span>
-          </div>
-        </div>
-        <div class="mc mc-teal r d1">
-          <span class="mc-badge bt">New instructions</span>
-          <h3>Major applications needing specialist input</h3>
-          <p>New complex applications in your sector — transport, viability, heritage, ecology — before a consultant is appointed.</p>
-          <div class="mc-pills">
-            <span class="mp">Transport</span>
-            <span class="mp">Heritage</span>
-            <span class="mp">Viability</span>
-          </div>
-        </div>
-        <div class="mc mc-green r d2">
-          <span class="mc-badge bg">Prior approvals</span>
-          <h3>Permitted development & conversion work</h3>
-          <p>Class MA office-to-resi, Class Q agricultural conversions — new applications and refused ones with appeal potential.</p>
-          <div class="mc-pills">
-            <span class="mp">Class MA</span>
-            <span class="mp">Class Q</span>
-            <span class="mp">PD appeals</span>
-          </div>
-        </div>
-        <div class="mc mc-violet r d3">
-          <span class="mc-badge bv">Market intel</span>
-          <h3>Site, sector & competitor monitoring</h3>
-          <p>Track applications near client land, monitor a target area, or watch competitor sites for development signals.</p>
-          <div class="mc-pills">
-            <span class="mp">Site watch</span>
-            <span class="mp">Area tracking</span>
-            <span class="mp">Sector trends</span>
-          </div>
+    </div>
+
+    <div class="uc-grid">
+      <div class="uc-card c1 reveal">
+        <div class="uc-icon amber">⚖️</div>
+        <h3>Appeal leads — refused applications with winnable grounds</h3>
+        <p>Sequential test failures, lack of evidence, out-of-centre refusals — cases where a well-prepared appeal has a strong chance of success. We find them before anyone else calls the client.</p>
+        <div class="uc-examples">
+          <span class="uc-ex">Retail / Class E</span>
+          <span class="uc-ex">Residential</span>
+          <span class="uc-ex">Industrial</span>
+          <span class="uc-ex">Prior approvals</span>
         </div>
       </div>
+      <div class="uc-card c2 reveal d1">
+        <div class="uc-icon navy">🏗️</div>
+        <h3>New instructions — approved or live applications needing specialist input</h3>
+        <p>Large or complex applications in your sector — transport, viability, heritage, ecology — where a specialist consultant hasn't yet been appointed. Get in early.</p>
+        <div class="uc-examples">
+          <span class="uc-ex">Transport</span>
+          <span class="uc-ex">Viability</span>
+          <span class="uc-ex">Heritage</span>
+          <span class="uc-ex">Ecology</span>
+        </div>
+      </div>
+      <div class="uc-card c3 reveal d2">
+        <div class="uc-icon green">🏢</div>
+        <h3>Prior approval work — Class MA, Class Q, and conversion refusals</h3>
+        <p>Office-to-residential and agricultural conversions — new applications and refused prior approvals with appeal potential. High volume, repeatable work.</p>
+        <div class="uc-examples">
+          <span class="uc-ex">Class MA</span>
+          <span class="uc-ex">Class Q</span>
+          <span class="uc-ex">PD appeals</span>
+        </div>
+      </div>
+      <div class="uc-card c4 reveal d3">
+        <div class="uc-icon purple">📍</div>
+        <h3>Market &amp; site intelligence — tracking areas, sectors, or specific sites</h3>
+        <p>Monitor planning activity near a client's land, track applications in a target sector, or watch competitor sites for development signals. Intelligence that shapes strategy.</p>
+        <div class="uc-examples">
+          <span class="uc-ex">Site watch</span>
+          <span class="uc-ex">Area tracking</span>
+          <span class="uc-ex">Sector trends</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tailoring callout -->
+    <div class="tailor-strip reveal">
+      <div>
+        <div class="ts-label">Your brief. Your criteria.</div>
+        <div class="ts-head">We configure it together — on a call, before your first digest.</div>
+        <div class="ts-body" style="margin-top:14px">
+          Every PlanningScout subscriber starts with a 30-minute onboarding call. We ask the questions most tools ignore.
+        </div>
+      </div>
+      <ul class="ts-points">
+        <li class="ts-point">
+          <span class="ts-check">✓</span>
+          <div>What does your best current lead look like? What made you take the case?</div>
+        </li>
+        <li class="ts-point">
+          <span class="ts-check">✓</span>
+          <div>What types of applications are a waste of your time? We'll filter those out.</div>
+        </li>
+        <li class="ts-point">
+          <span class="ts-check">✓</span>
+          <div>Which councils, regions, or use classes matter most to your practice?</div>
+        </li>
+        <li class="ts-point">
+          <span class="ts-check">✓</span>
+          <div>We then configure your keywords, trigger words, scoring thresholds, and council list — precisely. Your digest reflects your practice, not a generic template.</div>
+        </li>
+      </ul>
     </div>
   </div>
 </section>
 
 
-<!-- ═══ EXAMPLE LEAD ═══ -->
-<section id="example">
+<!-- ════ WHAT YOU RECEIVE ════ -->
+<section id="receive">
   <div class="wrap">
-    <div class="example-grid">
+    <div class="receive-grid">
       <div>
-        <span class="eyebrow r">The output</span>
-        <h2 class="r d1">What a qualified lead looks like.</h2>
-        <p class="subtext r d2">Each entry in your weekly digest is pre-read, pre-scored, and pre-qualified. Everything you need for a quick go/no-go — without opening a single portal.</p>
-        <ul class="checkpoints">
-          <li class="r">
-            <span class="ck-dot">✓</span>
-            <div><strong style="color:var(--bright)">Application reference &amp; council</strong> — direct link to the public planning portal page.</div>
+        <span class="eyebrow reveal">The output</span>
+        <h2 class="reveal d1">Everything you need.<br>Nothing you don't.</h2>
+        <p class="lead reveal d2">Each lead in your weekly digest is pre-read, pre-scored, and pre-qualified. A quick go/no-go decision without opening a single portal.</p>
+        <ul class="receive-list">
+          <li class="rl-item reveal">
+            <span class="rl-dot">✓</span>
+            <div>
+              <div class="rl-title">Application reference, council &amp; direct portal link</div>
+              <div class="rl-desc">One click to the public planning portal page — always current, always public.</div>
+            </div>
           </li>
-          <li class="r d1">
-            <span class="ck-dot">✓</span>
-            <div><strong style="color:var(--bright)">Lead score 0–100</strong> — how well it matches your brief and how strong the opportunity looks.</div>
+          <li class="rl-item reveal d1">
+            <span class="rl-dot">✓</span>
+            <div>
+              <div class="rl-title">Location and full project description</div>
+              <div class="rl-desc">Address and the full application description exactly as submitted.</div>
+            </div>
           </li>
-          <li class="r d2">
-            <span class="ck-dot">✓</span>
-            <div><strong style="color:var(--bright)">Matched signals</strong> — the exact phrases or criteria from the application that triggered your brief.</div>
+          <li class="rl-item reveal d2">
+            <span class="rl-dot">✓</span>
+            <div>
+              <div class="rl-title">Keywords &amp; trigger phrases found</div>
+              <div class="rl-desc">The exact phrases from the decision notice or application documents that triggered your brief — so you immediately understand why it was flagged.</div>
+            </div>
           </li>
-          <li class="r d3">
-            <span class="ck-dot">✓</span>
-            <div><strong style="color:var(--bright)">Estimated project value</strong> — construction value estimate based on use class and scale.</div>
+          <li class="rl-item reveal d3">
+            <span class="rl-dot">✓</span>
+            <div>
+              <div class="rl-title">Lead score 0–100</div>
+              <div class="rl-desc">How strongly the match aligns with your brief and how strong the opportunity looks.</div>
+            </div>
           </li>
-          <li class="r d4">
-            <span class="ck-dot">✓</span>
-            <div><strong style="color:var(--bright)">Companies House data</strong> — applicant company number and registered address, ready for outreach.</div>
+          <li class="rl-item reveal d4">
+            <span class="rl-dot">✓</span>
+            <div>
+              <div class="rl-title">Agent name &amp; address (where available)</div>
+              <div class="rl-desc">The planning agent on the application — your most direct route to a conversation.</div>
+            </div>
+          </li>
+          <li class="rl-item reveal d4">
+            <span class="rl-dot">✓</span>
+            <div>
+              <div class="rl-title">Estimated project value</div>
+              <div class="rl-desc">Construction value estimate based on use class and application scale.</div>
+            </div>
           </li>
         </ul>
       </div>
 
-      <div class="lead-card r d1">
-        <div class="lc-head">
-          <span class="lc-ref">25/01023/FUL · Tameside MBC</span>
-          <span class="lc-score">Score 88/100</span>
-        </div>
-        <div class="lc-body">
-          <div class="lc-title">Change of use from C3 residential to Hair &amp; Beauty Salon (Class E)</div>
-          <div class="lc-meta">📍 Ashton-under-Lyne · Decided: 12 Feb 2026 · REFUSED</div>
-          <div class="lc-rows">
-            <div class="lc-row">
-              <span class="rk">Match type</span>
-              <span class="rv">Appeal lead · Class E CoU</span>
+      <!-- Lead card -->
+      <div class="reveal d1">
+        <div class="lead-card">
+          <div class="lc-head">
+            <div class="lc-council">
+              <div class="lc-council-dot"></div>
+              Tameside Metropolitan Borough Council
             </div>
-            <div class="lc-row">
-              <span class="rk">Signals found</span>
-              <div class="tags">
-                <span class="tag ta">Out of centre</span>
-                <span class="tag ta">Sequential test</span>
-              </div>
-            </div>
-            <div class="lc-row">
-              <span class="rk">Est. value</span>
-              <span class="rv" style="color:var(--green);font-weight:600">£40k – £120k</span>
-            </div>
-            <div class="lc-row">
-              <span class="rk">Appeal basis</span>
-              <span class="rv" style="color:var(--teal)">Sequential failure · High winnability</span>
+            <div class="lc-score-wrap">
+              <span class="lc-decision">Refused</span>
+              <span class="lc-score">Score 88/100</span>
             </div>
           </div>
+          <div class="lc-body">
+            <div class="lc-ref">Application ref: 25/01023/FUL · Decided: 12 Feb 2026</div>
+            <div class="lc-title">Change of use from C3 residential to Hair &amp; Beauty Salon (Class E)</div>
+            <div class="lc-address">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5C4.29 1.5 2.5 3.29 2.5 5.5c0 3 4 6 4 6s4-3 4-6c0-2.21-1.79-4-4-4z" stroke="currentColor" stroke-width="1.2"/><circle cx="6.5" cy="5.5" r="1.2" stroke="currentColor" stroke-width="1.2"/></svg>
+              67 Henrietta Street, Ashton-under-Lyne, Tameside OL6 6HW
+            </div>
+            <div class="lc-table">
+              <div class="lc-row">
+                <span class="lc-key">Application type</span>
+                <span class="lc-val">Full Planning · Change of use</span>
+              </div>
+              <div class="lc-row">
+                <span class="lc-key">Trigger phrases found</span>
+                <div class="lc-tags">
+                  <span class="lc-tag tag-amber">Out of centre</span>
+                  <span class="lc-tag tag-amber">Sequential test</span>
+                  <span class="lc-tag tag-green">Lack of evidence</span>
+                </div>
+              </div>
+              <div class="lc-row">
+                <span class="lc-key">Keyword match</span>
+                <span class="lc-val">Class E · change of use · hair · beauty</span>
+              </div>
+              <div class="lc-row">
+                <span class="lc-key">Est. project value</span>
+                <span class="lc-val" style="color:var(--green);font-weight:600">£40,000 – £120,000</span>
+              </div>
+              <div class="lc-row">
+                <span class="lc-key">Agent</span>
+                <div class="lc-tags">
+                  <span class="lc-tag tag-navy">Available on portal ↗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="lc-footer">
+            <a href="#" class="lc-link">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 2h4v1.5H3.5V10h6.5V7H11v4.5H2V2z" fill="currentColor" opacity=".7"/><path d="M8 2h3v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><line x1="11" y1="2" x2="6" y2="7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+              View on Planning Portal
+            </a>
+            <span class="lc-note">Public data · planningscout.com</span>
+          </div>
         </div>
-        <div class="lc-foot">
-          <a href="#" class="lc-link">View on Portal ↗</a>
-          <span class="lc-note">All data is public record · planningscout.com</span>
+        <div class="gdpr-note reveal d2">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.2" stroke="currentColor" stroke-width="1.2"/><path d="M7 6v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="4.2" r=".8" fill="currentColor"/></svg>
+          Applicant names are not included in your digest in line with GDPR best practice. Agent details and the public application link are provided for outreach.
         </div>
       </div>
     </div>
@@ -790,58 +1385,84 @@ footer{background:var(--bg1);border-top:1px solid var(--line);padding:28px 0}
 </section>
 
 
-<!-- ═══ COVERAGE ═══ -->
-<section id="coverage" style="text-align:center">
+<!-- ════ PRACTICE AREA COVERAGE ════ -->
+<section id="coverage">
   <div class="wrap">
-    <span class="eyebrow r">Coverage</span>
-    <h2 class="r d1">Built for your practice area.</h2>
-    <p class="subtext r d2" style="margin:0 auto 0">
-      Every subscriber gets a custom monitoring brief. Below are example trigger sets for common practice types. If yours isn't listed, we'll build it together during onboarding.
-    </p>
-    <div class="cov-grid">
-      <div class="cov-card r">
-        <span class="cov-head">🏪 Retail &amp; Town Centre</span>
-        <div class="cov-tags">
-          <span class="ct">Lack of evidence</span><span class="ct">Sequential test</span><span class="ct">Out of centre</span><span class="ct">Edge of centre</span><span class="ct">Retail impact</span><span class="ct">Class E change of use</span>
-        </div>
+    <div class="cov-intro">
+      <div>
+        <span class="eyebrow reveal">Practice coverage</span>
+        <h2 class="reveal d1">Every practice area.<br>Every trigger that matters.</h2>
       </div>
-      <div class="cov-card r d1">
-        <span class="cov-head">🏘 Residential Development</span>
-        <div class="cov-tags">
-          <span class="ct">5-year housing supply</span><span class="ct">Tilted balance</span><span class="ct">NPPF para 11d</span><span class="ct">Affordable housing</span><span class="ct">Overdevelopment</span><span class="ct">Design quality</span>
-        </div>
-      </div>
-      <div class="cov-card r d2">
-        <span class="cov-head">🚦 Transport &amp; Highways</span>
-        <div class="cov-tags">
-          <span class="ct">Transport assessment</span><span class="ct">Highways impact</span><span class="ct">Trip generation</span><span class="ct">Safe access</span><span class="ct">Travel plan</span><span class="ct">Parking provision</span>
-        </div>
-      </div>
-      <div class="cov-card r">
-        <span class="cov-head">🏭 Industrial &amp; Logistics</span>
-        <div class="cov-tags">
-          <span class="ct">Class B2 / B8</span><span class="ct">Employment land</span><span class="ct">Sequential approach</span><span class="ct">Insufficient evidence</span><span class="ct">HGV routing</span><span class="ct">Economic impact</span>
-        </div>
-      </div>
-      <div class="cov-card r d1">
-        <span class="cov-head">🌿 Permitted Development</span>
-        <div class="cov-tags">
-          <span class="ct">Prior approval refused</span><span class="ct">Class MA</span><span class="ct">Class Q agricultural</span><span class="ct">Flood risk</span><span class="ct">Natural light</span><span class="ct">PD appeals</span>
-        </div>
-      </div>
-      <div class="cov-card r d2">
-        <span class="cov-head">🏛 Heritage &amp; Conservation</span>
-        <div class="cov-tags">
-          <span class="ct">Listed building</span><span class="ct">Conservation area</span><span class="ct">Heritage asset setting</span><span class="ct">Less than substantial harm</span><span class="ct">Historic England</span>
-        </div>
-      </div>
+      <p class="lead reveal d2" style="margin-top:8px">
+        Below are example keyword sets for the most common practice areas we configure. Your actual brief is built with you — these are starting points, not constraints.
+      </p>
     </div>
-    <div style="display:flex;justify-content:center" class="r">
-      <div class="custom-box">
-        <span style="font-size:22px;flex-shrink:0;line-height:1;margin-top:2px">⚙️</span>
-        <div class="cb-txt">
-          <strong>Your brief, your criteria — configured together.</strong>
-          We configure your keywords, trigger phrases, council selection, decision types, and scoring thresholds around your exact practice. Your digest is built for you — not a generic template.
+    <div class="cov-grid">
+      <div class="cov-card reveal">
+        <div class="cov-icon">🏪</div>
+        <div class="cov-name">Retail &amp; Town Centre</div>
+        <div class="cov-keywords">
+          <span class="kw">Lack of evidence</span>
+          <span class="kw">Sequential test</span>
+          <span class="kw">Out of centre</span>
+          <span class="kw">Edge of centre</span>
+          <span class="kw">Retail impact</span>
+          <span class="kw">Class E CoU</span>
+        </div>
+      </div>
+      <div class="cov-card reveal d1">
+        <div class="cov-icon">🏘</div>
+        <div class="cov-name">Residential Development</div>
+        <div class="cov-keywords">
+          <span class="kw">5-year housing supply</span>
+          <span class="kw">Tilted balance</span>
+          <span class="kw">NPPF para 11d</span>
+          <span class="kw">Affordable housing</span>
+          <span class="kw">Overdevelopment</span>
+        </div>
+      </div>
+      <div class="cov-card reveal d2">
+        <div class="cov-icon">🚦</div>
+        <div class="cov-name">Transport &amp; Highways</div>
+        <div class="cov-keywords">
+          <span class="kw">Transport assessment</span>
+          <span class="kw">Highways impact</span>
+          <span class="kw">Trip generation</span>
+          <span class="kw">Safe access</span>
+          <span class="kw">Travel plan</span>
+        </div>
+      </div>
+      <div class="cov-card reveal">
+        <div class="cov-icon">🏭</div>
+        <div class="cov-name">Industrial &amp; Logistics</div>
+        <div class="cov-keywords">
+          <span class="kw">Class B2 / B8</span>
+          <span class="kw">Employment land</span>
+          <span class="kw">Sequential approach</span>
+          <span class="kw">Insufficient evidence</span>
+          <span class="kw">HGV routing</span>
+        </div>
+      </div>
+      <div class="cov-card reveal d1">
+        <div class="cov-icon">🌿</div>
+        <div class="cov-name">Permitted Development</div>
+        <div class="cov-keywords">
+          <span class="kw">Prior approval refused</span>
+          <span class="kw">Class MA</span>
+          <span class="kw">Class Q agricultural</span>
+          <span class="kw">Flood risk</span>
+          <span class="kw">Natural light</span>
+        </div>
+      </div>
+      <div class="cov-card reveal d2">
+        <div class="cov-icon">🏛</div>
+        <div class="cov-name">Heritage &amp; Conservation</div>
+        <div class="cov-keywords">
+          <span class="kw">Listed building</span>
+          <span class="kw">Conservation area</span>
+          <span class="kw">Heritage asset setting</span>
+          <span class="kw">Less than substantial harm</span>
+          <span class="kw">Historic England</span>
         </div>
       </div>
     </div>
@@ -849,18 +1470,17 @@ footer{background:var(--bg1);border-top:1px solid var(--line);padding:28px 0}
 </section>
 
 
-<!-- ═══ TESTIMONIAL ═══ -->
+<!-- ════ TESTIMONIAL ════ -->
 <section id="testimonial">
   <div class="wrap">
-    <div class="testi-wrap">
-      <div class="testi-stars r">
+    <div class="testi-inner">
+      <div class="testi-stars reveal">
         <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
       </div>
-      <span class="testi-mark r d1">"</span>
-      <p class="testi-q r d2">
-        Before using PlanningScout, our outreach was manual and inconsistent. Now, we've seen an 8–15× increase in monthly opportunities through automated UK-wide monitoring. It has reduced our manual workload significantly. We've essentially automated the&nbsp;'hunt.'
+      <p class="testi-quote reveal d1">
+        Before using PlanningScout, our outreach was manual and inconsistent. Now, we've seen an 8–15× increase in monthly opportunities through automated UK-wide monitoring. It has reduced our manual workload significantly. We've essentially automated the 'hunt.'
       </p>
-      <div class="testi-attr r d3">
+      <div class="testi-attr reveal d2">
         <div class="testi-av">M</div>
         <div>
           <div class="testi-name">Mark</div>
@@ -872,248 +1492,228 @@ footer{background:var(--bg1);border-top:1px solid var(--line);padding:28px 0}
 </section>
 
 
-<!-- ═══ PRICING ═══ -->
+<!-- ════ PRICING ════ -->
 <section id="pricing">
-  <div class="wrap" style="text-align:center">
-    <span class="eyebrow r">Pricing</span>
-    <h2 class="r d1">Try free for a month.<br>Then choose what fits.</h2>
-    <p class="subtext r d2" style="margin:0 auto 28px">
-      Start with a full month free — no card, no commitment. If PlanningScout finds you one instruction, it pays for itself many times over. Then pick the plan that matches your practice.
-    </p>
-    <div class="trial-banner r d3">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.3" stroke="#22c55e" stroke-width="1.2"/><path d="M4.2 7l2 2 3.6-3.6" stroke="#22c55e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      1 month free on all plans · No credit card required · Cancel anytime
+  <div class="wrap">
+    <div class="pricing-layout">
+      <div class="pricing-copy">
+        <span class="eyebrow reveal">Pricing</span>
+        <h2 class="reveal d1">One plan.<br>Everything included.<br>Free for a month.</h2>
+        <p class="lead reveal d2">
+          Start with a full month free — no credit card, no commitment. See real leads from your target councils before you spend a penny. If it works for you, continue at £149/month.
+        </p>
+        <p class="reveal d3" style="font-size:14.5px;color:var(--ink-dim);line-height:1.75;margin-top:6px">
+          A single planning appeal instruction typically generates £5,000–£50,000 in fees. PlanningScout pays for itself with one lead.
+        </p>
+        <div style="margin-top:32px" class="reveal d3">
+          <div class="trial-pill">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.3" stroke="currentColor" stroke-width="1.2"/><path d="M4.2 7l2 2 3.6-3.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Try free for 1 full month · No card required
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal d1">
+        <div class="pricing-card">
+          <div class="pc-top">
+            <div class="pc-plan">Professional Plan</div>
+            <div class="pc-price"><sup>£</sup>149</div>
+            <div class="pc-cycle">per month · cancel anytime</div>
+            <div class="pc-trial-badge">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4.8" stroke="currentColor" stroke-width="1.1"/><path d="M3.3 5.5l1.6 1.6 2.8-2.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              First month completely free
+            </div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-blurb">Everything you need to run a professional planning intelligence operation for your consultancy.</div>
+            <ul class="pc-feats">
+              <li class="pc-feat"><span class="feat-ck">✓</span>Weekly scored lead digest every Monday morning</li>
+              <li class="pc-feat"><span class="feat-ck">✓</span>44+ UK councils — all available councils included</li>
+              <li class="pc-feat"><span class="feat-ck">✓</span>30-minute onboarding call to configure your exact brief</li>
+              <li class="pc-feat"><span class="feat-ck">✓</span>Custom keywords, trigger phrases &amp; scoring thresholds</li>
+              <li class="pc-feat"><span class="feat-ck">✓</span>Decision notice scanning — trigger words found in documents</li>
+              <li class="pc-feat"><span class="feat-ck">✓</span>Application reference, location, description &amp; portal link</li>
+              <li class="pc-feat"><span class="feat-ck">✓</span>Agent name &amp; address where available</li>
+              <li class="pc-feat"><span class="feat-ck">✓</span>Estimated project value per lead</li>
+              <li class="pc-feat"><span class="feat-ck">✓</span>Live Google Sheets dashboard — full 12-week history</li>
+              <li class="pc-feat"><span class="feat-ck">✓</span>Instant email alert for high-score matches</li>
+              <li class="pc-feat"><span class="feat-ck">✓</span>Brief updates anytime — we adjust within 48 hours</li>
+            </ul>
+            <a href="#cta" class="pc-cta">Start free trial →</a>
+            <div class="pc-note">
+              No credit card · 1 month free · then £149/month excl. VAT<br>
+              Cancel anytime · Annual billing saves 2 months
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="price-grid">
-
-      <!-- Practitioner -->
-      <div class="pc r">
-        <div class="pc-top">
-          <div class="pc-name">Practitioner</div>
-          <div class="pc-price"><sup>£</sup>99</div>
-          <div class="pc-mo">per month after free trial</div>
-          <div class="pc-trial">
-            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4.8" stroke="#22c55e" stroke-width="1.1"/><path d="M3.3 5.5l1.6 1.6 2.8-2.8" stroke="#22c55e" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            1 month free to start
-          </div>
-        </div>
-        <div class="pc-body">
-          <div class="pc-blurb">Solo consultant or agent building their pipeline.</div>
-          <ul class="pc-feats">
-            <li><span class="ck">✓</span>Weekly email digest</li>
-            <li><span class="ck">✓</span>Up to 10 councils of your choice</li>
-            <li><span class="ck">✓</span>Custom keyword &amp; trigger set</li>
-            <li><span class="ck">✓</span>Score + signal breakdown per lead</li>
-            <li><span class="ck">✓</span>Live Google Sheets dashboard</li>
-            <li><span class="ck">✓</span>4-week rolling history</li>
-          </ul>
-          <a href="#cta" class="pc-cta cta-out">Start Free Trial →</a>
-        </div>
-      </div>
-
-      <!-- Professional -->
-      <div class="pc hot r d1">
-        <div class="pc-badge">Most Popular</div>
-        <div class="pc-top">
-          <div class="pc-name">Professional</div>
-          <div class="pc-price"><sup>£</sup>149</div>
-          <div class="pc-mo">per month after free trial</div>
-          <div class="pc-trial">
-            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4.8" stroke="#22c55e" stroke-width="1.1"/><path d="M3.3 5.5l1.6 1.6 2.8-2.8" stroke="#22c55e" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            1 month free to start
-          </div>
-        </div>
-        <div class="pc-body">
-          <div class="pc-blurb">Active consultancy needing full UK-wide coverage.</div>
-          <ul class="pc-feats">
-            <li><span class="ck">✓</span>Everything in Practitioner</li>
-            <li><span class="ck">✓</span>All 50+ UK councils</li>
-            <li><span class="ck">✓</span>Instant alerts for high-score matches</li>
-            <li><span class="ck">✓</span>Companies House enrichment</li>
-            <li><span class="ck">✓</span>Estimated project value per lead</li>
-            <li><span class="ck">✓</span>12-week rolling history</li>
-          </ul>
-          <a href="#cta" class="pc-cta cta-fill">Start Free Trial →</a>
-        </div>
-      </div>
-
-      <!-- Practice -->
-      <div class="pc r d2">
-        <div class="pc-top">
-          <div class="pc-name">Practice</div>
-          <div class="pc-price"><sup>£</sup>299</div>
-          <div class="pc-mo">per month · up to 5 users</div>
-          <div class="pc-trial">
-            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4.8" stroke="#22c55e" stroke-width="1.1"/><path d="M3.3 5.5l1.6 1.6 2.8-2.8" stroke="#22c55e" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            1 month free to start
-          </div>
-        </div>
-        <div class="pc-body">
-          <div class="pc-blurb">Multi-person team or multi-sector specialist practice.</div>
-          <ul class="pc-feats">
-            <li><span class="ck">✓</span>Everything in Professional</li>
-            <li><span class="ck">✓</span>Up to 5 team members</li>
-            <li><span class="ck">✓</span>Multiple monitoring briefs (sectors)</li>
-            <li><span class="ck">✓</span>CSV export &amp; API access</li>
-            <li><span class="ck">✓</span>Onboarding call included</li>
-            <li><span class="ck">✓</span>Priority support</li>
-          </ul>
-          <a href="#cta" class="pc-cta cta-out">Start Free Trial →</a>
-        </div>
-      </div>
-
-    </div>
-    <p class="price-note r">
-      A single planning instruction typically generates £5,000–£50,000 in fees.<br>
-      Annual billing saves 2 months · All prices exclude VAT
-    </p>
   </div>
 </section>
 
 
-<!-- ═══ FAQ ═══ -->
+<!-- ════ FAQ ════ -->
 <section id="faq">
   <div class="wrap">
-    <span class="eyebrow r">FAQ</span>
-    <h2 class="r d1" style="max-width:480px">Common questions.</h2>
-    <div class="faq-grid">
-
-      <div class="faq-item r">
-        <div class="faq-q" onclick="doFaq(this)">
-          <span class="faq-q-txt">How does the free trial work?</span>
-          <span class="faq-ch">▾</span>
-        </div>
-        <div class="faq-a"><p>You get one full month free — no credit card required. We set up your monitoring brief, run the first scan, and you receive a real digest. After the trial, choose the plan that fits. If PlanningScout isn't delivering value, you simply don't subscribe. No awkward cancellations.</p></div>
+    <div class="faq-layout">
+      <div class="faq-intro">
+        <span class="eyebrow reveal">FAQ</span>
+        <h2 class="reveal d1">Common questions.</h2>
+        <p class="lead reveal d2" style="max-width:none">Anything else? Email us at <a href="mailto:hello@planningscout.com" style="color:var(--navy);font-weight:500">hello@planningscout.com</a></p>
       </div>
+      <div class="faq-list">
 
-      <div class="faq-item r d1">
-        <div class="faq-q" onclick="doFaq(this)">
-          <span class="faq-q-txt">Is this only useful for appeal work?</span>
-          <span class="faq-ch">▾</span>
+        <div class="faq-item reveal">
+          <div class="faq-q" onclick="faqToggle(this)">
+            <span class="faq-q-txt">How does the free trial work?</span>
+            <span class="faq-icon">▾</span>
+          </div>
+          <div class="faq-a"><p>You get one full month free with no credit card required. We start with an onboarding call, configure your brief, run the first scan, and send you a real digest. After the trial, choose whether to continue at £149/month. If it's not delivering value, you simply don't subscribe — no awkward cancellations.</p></div>
         </div>
-        <div class="faq-a"><p>No. While appeal leads are a core use case, PlanningScout can be configured for any planning intelligence need: tracking new major applications for instruction leads, monitoring prior approvals, watching specific sites or areas, or following competitor and market activity in your sector.</p></div>
-      </div>
 
-      <div class="faq-item r d2">
-        <div class="faq-q" onclick="doFaq(this)">
-          <span class="faq-q-txt">Which councils are covered?</span>
-          <span class="faq-ch">▾</span>
+        <div class="faq-item reveal d1">
+          <div class="faq-q" onclick="faqToggle(this)">
+            <span class="faq-q-txt">Is this only for appeal consultants?</span>
+            <span class="faq-icon">▾</span>
+          </div>
+          <div class="faq-a"><p>No. While appeal leads are a core use case, PlanningScout can be configured for any planning intelligence need — new major applications where you can offer specialist consultancy, prior approval monitoring, site-specific watching, or market intelligence in a target sector. We configure the system around what you actually do.</p></div>
         </div>
-        <div class="faq-a"><p>50+ councils across England — Greater Manchester, West Yorkshire, London boroughs, South East, East Midlands, West Midlands, East of England, South West, and North East. Coverage expands regularly. The Practitioner plan covers up to 10 councils; Professional and Practice plans cover all available councils.</p></div>
-      </div>
 
-      <div class="faq-item r d3">
-        <div class="faq-q" onclick="doFaq(this)">
-          <span class="faq-q-txt">How is the lead score calculated?</span>
-          <span class="faq-ch">▾</span>
+        <div class="faq-item reveal d2">
+          <div class="faq-q" onclick="faqToggle(this)">
+            <span class="faq-q-txt">Which councils are covered?</span>
+            <span class="faq-icon">▾</span>
+          </div>
+          <div class="faq-a"><p>44+ councils across England — Greater Manchester (including Tameside, Manchester, Salford, Bolton, Bury, Rochdale, Trafford, Oldham), West Yorkshire (Leeds, Bradford, Wakefield, Calderdale, Wigan), London boroughs, South East, East Midlands, West Midlands, East of England, South West, and North East. We're adding more councils regularly. If a council you need isn't covered yet, let us know — we prioritise by demand.</p></div>
         </div>
-        <div class="faq-a"><p>Each application is scored based on how strongly it matches your monitoring brief. For appeal leads, the score weights the strength of the refusal grounds — "lack of evidence" refusals score highest (easiest win on appeal), sequential test failures score strongly, and generic boilerplate is filtered out. Scoring logic is fully configurable per client.</p></div>
-      </div>
 
-      <div class="faq-item r">
-        <div class="faq-q" onclick="doFaq(this)">
-          <span class="faq-q-txt">Where does the data come from?</span>
-          <span class="faq-ch">▾</span>
+        <div class="faq-item reveal d3">
+          <div class="faq-q" onclick="faqToggle(this)">
+            <span class="faq-q-txt">How is the lead score calculated?</span>
+            <span class="faq-icon">▾</span>
+          </div>
+          <div class="faq-a"><p>Each application is scored based on how strongly it matches your brief. For appeal leads, the score weights the strength of the refusal grounds — "lack of evidence" refusals score highest (easiest wins on appeal), sequential test failures score strongly, and generic boilerplate citations score low. The scoring logic is fully configurable per client. Applications below your minimum threshold are never shown to you.</p></div>
         </div>
-        <div class="faq-a"><p>Entirely from public UK planning portals — the same pages any member of the public can access. Application details, decision notices, and applicant names are all publicly available. We read and process that data automatically, at scale, every week. No private systems, no GDPR concerns.</p></div>
-      </div>
 
-      <div class="faq-item r d1">
-        <div class="faq-q" onclick="doFaq(this)">
-          <span class="faq-q-txt">What format does the digest come in?</span>
-          <span class="faq-ch">▾</span>
+        <div class="faq-item reveal">
+          <div class="faq-q" onclick="faqToggle(this)">
+            <span class="faq-q-txt">Where does the data come from?</span>
+            <span class="faq-icon">▾</span>
+          </div>
+          <div class="faq-a"><p>Entirely from public UK planning portals — the same pages any member of the public can access. Application details, decision notices, and agent names are all publicly available. We read and process that data automatically, at scale, every week. No private data systems, no GDPR concerns around what we provide to you.</p></div>
         </div>
-        <div class="faq-a"><p>A formatted email every Monday morning, plus a live Google Sheet updated weekly with your full lead history. The sheet is searchable, sortable, and has a column for your own notes and status. Practice plan subscribers also get CSV and API export for integration into their own tools.</p></div>
-      </div>
 
-      <div class="faq-item r d2">
-        <div class="faq-q" onclick="doFaq(this)">
-          <span class="faq-q-txt">Can I change my monitoring brief later?</span>
-          <span class="faq-ch">▾</span>
+        <div class="faq-item reveal d1">
+          <div class="faq-q" onclick="faqToggle(this)">
+            <span class="faq-q-txt">What format does the digest come in?</span>
+            <span class="faq-icon">▾</span>
+          </div>
+          <div class="faq-a"><p>A formatted email every Monday morning, plus a live Google Sheet updated weekly with your full lead history. The sheet is searchable, sortable, and has a column for your own notes and status tracking. High-score matches also trigger an immediate email alert so nothing urgent waits until Monday.</p></div>
         </div>
-        <div class="faq-a"><p>Yes — your brief is a living configuration, not a one-time setup. If you expand into new sectors, add councils, or want to refine your trigger set based on what's coming through, just get in touch. We update it within 48 hours and it takes effect on the next weekly run.</p></div>
-      </div>
 
-      <div class="faq-item r d3">
-        <div class="faq-q" onclick="doFaq(this)">
-          <span class="faq-q-txt">What if a council I need isn't covered?</span>
-          <span class="faq-ch">▾</span>
+        <div class="faq-item reveal d2">
+          <div class="faq-q" onclick="faqToggle(this)">
+            <span class="faq-q-txt">Can I change my brief after we've set it up?</span>
+            <span class="faq-icon">▾</span>
+          </div>
+          <div class="faq-a"><p>Yes — your brief is a living configuration. If you expand into new sectors, want to add councils, or want to refine your trigger set based on what's coming through, just let us know. We update it within 48 hours and it takes effect on the next weekly run.</p></div>
         </div>
-        <div class="faq-a"><p>Let us know during onboarding — we prioritise adding councils our users need. Most UK councils use Idox planning software, which we support. If a council uses a different system, we'll tell you honestly whether it's feasible and give you a timeline.</p></div>
-      </div>
 
+        <div class="faq-item reveal d3">
+          <div class="faq-q" onclick="faqToggle(this)">
+            <span class="faq-q-txt">Why don't you include applicant contact details?</span>
+            <span class="faq-icon">▾</span>
+          </div>
+          <div class="faq-a"><p>In line with GDPR best practice, we don't include applicant names or personal contact information in your digest. We do include agent details and a direct link to the public portal page — where the full application, including any agent and applicant contact information, is publicly accessible and updated by the council.</p></div>
+        </div>
+
+      </div>
     </div>
   </div>
 </section>
 
 
-<!-- ═══ FINAL CTA ═══ -->
+<!-- ════ CTA ════ -->
 <section id="cta">
   <div class="wrap">
     <div class="cta-inner">
-      <h2 class="cta-h r">See it before you commit.</h2>
-      <p class="cta-sub r d1">Enter your email and we'll send you a real sample digest — the same format your practice would receive every Monday. Free. No card.</p>
-      <div class="email-row r d2">
+      <div class="cta-eyebrow reveal">Start for free</div>
+      <h2 class="cta-h reveal d1">See real leads before<br>you spend a penny.</h2>
+      <p class="cta-sub reveal d2">
+        Enter your email and we'll send you a real sample digest — the format your practice would receive every Monday. No card, no commitment.
+      </p>
+      <div class="email-form reveal d3">
         <input class="email-in" type="email" id="emailInput" placeholder="you@consultancy.co.uk">
-        <button class="email-btn" onclick="handleSub()">Get Sample →</button>
+        <button class="email-btn" onclick="handleSub()">Get free sample →</button>
       </div>
       <div id="msg"></div>
-      <p class="email-note r d3">Free · No credit card · Unsubscribe anytime</p>
+      <p class="email-note reveal d4">Free · No credit card · Unsubscribe anytime</p>
     </div>
   </div>
 </section>
 
 
-<!-- ═══ FOOTER ═══ -->
+<!-- ════ FOOTER ════ -->
 <footer>
   <div class="foot-inner">
-    <span class="foot-copy">© 2026 PlanningScout · A Ceasco product</span>
+    <a href="#" class="foot-logo">
+      <div class="foot-logo-mark">
+        <svg width="16" height="16" viewBox="0 0 22 22" fill="none">
+          <path d="M2 9C2 7.34 3.34 6 5 6H7V16H5C3.34 16 2 14.66 2 13V9Z" fill="#f0a500" opacity=".8"/>
+          <path d="M20 9C20 7.34 18.66 6 17 6H15V16H17C18.66 16 20 14.66 20 13V9Z" fill="#f0a500" opacity=".8"/>
+          <path d="M7 10.5C8.5 9.5 10 9 11 9C12 9 13.5 9.5 15 10.5" stroke="#f0a500" stroke-width="1.6" stroke-linecap="round" opacity=".6"/>
+          <circle cx="5" cy="11" r="2.4" fill="rgba(0,0,0,.5)"/>
+          <circle cx="17" cy="11" r="2.4" fill="rgba(0,0,0,.5)"/>
+        </svg>
+      </div>
+      <span class="foot-logo-txt">Planning<span>Scout</span></span>
+    </a>
     <div class="foot-links">
       <a href="mailto:hello@planningscout.com">hello@planningscout.com</a>
       <a href="#">Privacy</a>
       <a href="#">Terms</a>
     </div>
-    <span class="foot-brand">Powered by <strong>Ceasco</strong></span>
+    <span class="foot-copy">© 2026 PlanningScout. All rights reserved.</span>
   </div>
 </footer>
 
 
 <script>
-// Nav scroll state
-const navEl = document.getElementById('nav');
+/* Nav scroll */
+const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
-  navEl.classList.toggle('scrolled', window.scrollY > 40);
+  nav.classList.toggle('scrolled', window.scrollY > 40);
 }, { passive: true });
 
-// Scroll reveal
-const obs = new IntersectionObserver(entries => {
+/* Scroll reveal */
+const ro = new IntersectionObserver(entries => {
   entries.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('v'); obs.unobserve(e.target); }
+    if (e.isIntersecting) { e.target.classList.add('vis'); ro.unobserve(e.target); }
   });
-}, { threshold: 0.08, rootMargin: '0px 0px -28px 0px' });
-document.querySelectorAll('.r').forEach(el => obs.observe(el));
+}, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
 
-// FAQ accordion
-function doFaq(btn) {
+/* FAQ */
+function faqToggle(btn) {
   const item = btn.closest('.faq-item');
-  const open = item.classList.contains('open');
+  const wasOpen = item.classList.contains('open');
   document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
-  if (!open) item.classList.add('open');
+  if (!wasOpen) item.classList.add('open');
 }
 
-// Email capture — swap with Formspree/Loops/ConvertKit
+/* Email submit */
 function handleSub() {
   const inp = document.getElementById('emailInput');
   const msg = document.getElementById('msg');
   const v = inp.value.trim();
   if (!v || !v.includes('@') || !v.includes('.')) {
-    msg.style.color = '#ef4444';
+    msg.style.color = '#dc2626';
     msg.textContent = '⚠ Please enter a valid email address.';
     return;
   }
-  msg.style.color = '#22c55e';
-  msg.textContent = '✓ Sample on its way — check your inbox within a few hours.';
+  // 👉 Replace with Formspree / Loops / ConvertKit endpoint
+  msg.style.color = '#16a34a';
+  msg.textContent = '✓ On its way — check your inbox in the next few hours.';
   inp.value = '';
 }
 document.getElementById('emailInput').addEventListener('keydown', e => {
