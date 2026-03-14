@@ -925,19 +925,57 @@ footer {
 .reveal.d4 { transition-delay: .32s; }
 .reveal.vis { opacity: 1; transform: none; }
 
-/* ────────────────────────────────────────────────
-   MOBILE
-──────────────────────────────────────────────── */
-@media (max-width: 500px) {
-  h1 { letter-spacing: -1px; }
-  .hero-strip { flex-direction: column; align-items: flex-start; gap: 14px; }
-  .email-form { flex-direction: column; border-radius: var(--r); }
-  .email-btn { padding: 13px; }
-  .pricing-card { border-radius: var(--r2); }
-  .pc-top, .pc-body { padding: 24px 22px; }
-  .how-step { padding: 30px 24px; }
-  .tailor-strip { border-radius: var(--r2); }
-  .faq-layout { gap: 28px; }
+/* ════════════════ MOBILE RESPONSIVENESS ════════════════ */
+
+@media (max-width: 768px) {
+  /* 1. Shrink the Main Headlines so they don't wrap weirdly */
+  h1 { 
+    font-size: 42px !important; 
+    line-height: 1.1;
+  }
+  
+  h2 { 
+    font-size: 32px !important; 
+  }
+
+  /* 2. Fix the Hero Section (Prime Leads / Zero Effort) */
+  .hero-grid {
+    grid-template-columns: 1fr; /* Stacks the text on top of the image */
+    text-align: center;
+    gap: 40px;
+  }
+
+  /* 3. Scale down the Dashboard Mockup so it fits the screen width */
+  .hero-visual {
+    transform: scale(0.9); /* Shrinks the mock slightly to prevent overflow */
+    margin: 0 -20px; /* Pulls it slightly into the margins for better fit */
+  }
+
+  /* 4. Fix the "What You Receive" Grid */
+  .receive-grid {
+    grid-template-columns: 1fr; /* Stacks the checklist on top of the lead card */
+  }
+
+  /* 5. Adjust the Nav Bar */
+  nav .wrap {
+    padding: 15px 20px;
+  }
+  
+  .nav-links {
+    display: none; /* Hides the text links on mobile to keep it clean */
+  }
+
+  /* 6. Ensure the Lead Card (Manchester example) doesn't get too wide */
+  .lead-card {
+    padding: 20px;
+    margin: 10px 0;
+  }
+
+  .lc-header {
+    flex-direction: column; /* Stacks "Council Name" and "Score" on mobile */
+    align-items: flex-start;
+    gap: 10px;
+  }
 }
 </style>
 </head>
