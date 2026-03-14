@@ -647,45 +647,86 @@ h1 em { font-style: italic; color: var(--amber); }
 /* ────────────────────────────────────────────────
    PRACTICE AREAS
 ──────────────────────────────────────────────── */
+/* ────────────────────────────────────────────────
+   PRACTICE AREAS - FIXED
+──────────────────────────────────────────────── */
 #coverage { 
   padding: 100px 0; 
   background: var(--surface-2); 
 }
 
 .cov-intro {
-  /* Change from 'grid' to 'block' to allow our HTML centering to work */
   display: block; 
-  margin: 0 auto 60px auto; 
-  max-width: 850px; 
+  margin: 0 auto 80px auto; /* Increased bottom margin for better separation */
+  max-width: 800px; 
   text-align: center;
 }
 
-/* This ensures the 'Deep-Level Detection' eyebrow is centered */
 .cov-intro .eyebrow {
   justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .cov-grid {
   display: grid; 
   grid-template-columns: repeat(3, 1fr); 
-  gap: 16px;
+  gap: 24px; /* Space between cards */
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
-/* Mobile adjustments for the grid below the header */
+.cov-card {
+  background: #ffffff; 
+  border: 1px solid var(--border);
+  border-radius: 16px; 
+  padding: 32px 24px; /* More internal padding for a luxury feel */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cov-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.04);
+}
+
+.cov-icon { 
+  font-size: 28px; 
+  margin-bottom: 20px; 
+}
+
+.cov-name {
+  font-family: var(--head); 
+  font-size: 18px; 
+  font-weight: 600;
+  color: var(--ink); 
+  margin-bottom: 16px; 
+}
+
+.cov-keywords { 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 8px; 
+}
+
+.kw {
+  font-family: var(--mono); 
+  font-size: 11px; 
+  color: var(--ink-dim);
+  background: #f8fafc; 
+  border: 1px solid #e2e8f0;
+  padding: 4px 10px; 
+  border-radius: 6px;
+}
+
+/* Mobile Fixes */
 @media (max-width: 900px) { 
   .cov-grid { grid-template-columns: 1fr 1fr; } 
 }
 @media (max-width: 600px) { 
-  .cov-grid { grid-template-columns: 1fr; } 
-}
-
-.cov-card {
-  background: var(--surface); 
-  border: 1.5px solid var(--border);
-  border-radius: var(--r2); 
-  padding: 24px;
-  transition: all .2s var(--ease);
+  .cov-grid { grid-template-columns: 1fr; padding: 0 20px; } 
 }
 /* ────────────────────────────────────────────────
    TESTIMONIAL
@@ -1418,6 +1459,9 @@ footer {
       <p class="lead reveal d2">
         Planning Scout goes beyond surface-level portal summaries. Our system meticulously <strong>scans full application documents and decision notices</strong> for specific technical markers—from BNG requirements to sequential test failures.
       </p>
+      <p style="font-size: 14px; opacity: 0.7; margin-top: 20px;" class="reveal d3">
+        Below are example keyword sets for the most common practice areas we configure. Your actual brief is built with you — these are starting points, not constraints.
+      </p>
     </div>
 
     <div class="cov-grid">
@@ -1436,7 +1480,7 @@ footer {
 
       <div class="cov-card reveal d2">
         <div class="cov-icon">🚦</div>
-        <div class="cov-name">Transport &amp; Highways</div>
+        <div class="cov-name">Transport & Highways</div>
         <div class="cov-keywords">
           <span class="kw">Transport assessment</span>
           <span class="kw">Highways impact</span>
@@ -1448,7 +1492,7 @@ footer {
 
       <div class="cov-card reveal">
         <div class="cov-icon">🏭</div>
-        <div class="cov-name">Industrial &amp; Logistics</div>
+        <div class="cov-name">Industrial & Logistics</div>
         <div class="cov-keywords">
           <span class="kw">Class B2 / B8</span>
           <span class="kw">Employment land</span>
@@ -1472,7 +1516,7 @@ footer {
 
       <div class="cov-card reveal d2">
         <div class="cov-icon">🏛️</div>
-        <div class="cov-name">Heritage &amp; Conservation</div>
+        <div class="cov-name">Heritage & Conservation</div>
         <div class="cov-keywords">
           <span class="kw">Listed building</span>
           <span class="kw">Conservation area</span>
