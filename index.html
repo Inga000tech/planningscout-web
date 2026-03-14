@@ -60,7 +60,11 @@
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
+  /* We keep your original color, but add the dot pattern after it */
   background: var(--surface);
+  background-image: radial-gradient(circle at 2px 2px, rgba(0,0,0,0.03) 1px, transparent 0);
+  background-size: 40px 40px;
+  
   color: var(--ink-mid);
   font-family: var(--body);
   font-size: 16px;
@@ -1357,15 +1361,7 @@ footer {
 <!-- ════ PRACTICE AREA COVERAGE ════ -->
 <section id="coverage">
   <div class="wrap">
-    <div class="cov-intro">
-      <div>
-        <span class="eyebrow reveal">Practice coverage</span>
-        <h2 class="reveal d1">Every practice area.<br>Every trigger that matters.</h2>
-      </div>
-      <p class="lead reveal d2" style="margin-top:8px">
-        Below are example keyword sets for the most common practice areas we configure. Your actual brief is built with you — these are starting points, not constraints.
-      </p>
-      </div>
+    cov-intro
       <div class="cov-card reveal d1">
         <div class="cov-icon">🏘</div>
         <div class="cov-name">Residential Development</div>
