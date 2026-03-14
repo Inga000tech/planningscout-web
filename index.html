@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PlanningScout — UK Planning Intelligence for Consultancies</title>
 <meta name="description" content="PlanningScout scans 44+ UK council portals every week and delivers pre-qualified planning leads tailored to your practice. Start free.">
-<link rel="icon" type="image/png" href="fav-icon-PS.png">
-<link rel="icon" type="image/png" href="topbar-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -84,10 +82,20 @@ img, svg { display: block; }
 /* ────────────────────────────────────────────────
    NAV
 ──────────────────────────────────────────────── */
-<a href="#" class="logo" style="display: flex; align-items: center; gap: 11px;">
-  <img src="topbar-logo.png" alt="PlanningScout" style="width: 38px; height: 38px; object-fit: contain;">
-  <div class="logo-text" style="font-family: var(--head); font-size: 18px; font-weight: 600; color: var(--ink); letter-spacing: -.3px;">Planning<span style="color: var(--amber);">Scout</span></div>
-</a>
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 99;
+  height: 66px;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: box-shadow .25s var(--ease);
+}
+nav.scrolled { box-shadow: var(--shadow-sm); }
+.nav-inner {
+  max-width: 1080px; margin: 0 auto; padding: 0 36px;
+  height: 100%; display: flex; align-items: center;
+  justify-content: space-between; gap: 24px;
+}
 /* ── LOGO ── */
 .logo { display: flex; align-items: center; gap: 11px; flex-shrink: 0; }
 .logo-mark {
