@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PlanningScout — UK Planning Intelligence for Consultancies</title>
-<meta name="description" content="PlanningScout scans 44+ UK council portals every week and delivers pre-qualified planning leads tailored to your practice. Start free.">
+<title>PlanningScout — Automated Planning Leads for UK Consultancies | Free Trial</title>
+<meta name="description" content="Get a shortlist regularly of pre-scored UK planning leads — before your competitors call the client. 44+ councils, configured to your practice to ensure accurate, qualified leads. First month free, no card needed.">
 <link rel="icon" type="image/png" href="FAV-icon-.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -59,7 +59,7 @@
 ──────────────────────────────────────────────── */
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body {
+html, body {
   /* We keep your original color, but add the dot pattern after it */
   background: var(--surface);
   background-image: radial-gradient(circle at 2px 2px, rgba(0,0,0,0.03) 1px, transparent 0);
@@ -71,6 +71,8 @@ body {
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
 }
 a { text-decoration: none; color: inherit; }
 img, svg { display: block; }
@@ -1058,20 +1060,21 @@ footer {
     <div class="hero-content">
 
       <div class="hero-text">
-        <div class="hero-badge reveal">
+       <div class="hero-badge reveal">
           <span class="badge-dot"></span>
-          44+ UK Councils · Every week
+          Live · 44+ UK councils · New leads delivered every week.
         </div>
-<h1 class="reveal d1" style="line-height: 1.2;">
-  <span style="white-space: nowrap;">Prime leads.</span><br>
-  <span style="white-space: nowrap;">Zero effort.</span>
+<h1 class="reveal d1" style="line-height: 1.1;">
+  Stop hunting for<br>
+  planning work.<br>
+  <em style="color: var(--amber); font-style: italic;">Let it find you.</em>
 </h1>
         <p class="hero-sub reveal d2">
-          You shouldn't be paying a team to click through council websites. PlanningScout automates your lead generation by scanning every planning application across 44+ portals for you. We deliver the "gold" straight to your inbox by 8:00 AM.
+          PlanningScout reads thousands of council decision notices every week so you don't have to. Every Monday morning you receive a scored, ranked shortlist of leads matched to your practice - complete with the exact phrases that make each case worth pursuing.
         </p>
         <div class="hero-actions reveal d3">
           <a href="#cta" class="btn-hero">Start free — no card needed</a>
-          <a href="#receive" class="btn-hero-ghost">See a sample lead ↓</a>
+        <a href="#receive" class="btn-hero-ghost">See what a lead looks like ↓</a>
         </div>
         <div class="hero-proof reveal d4">
           <div class="proof-item">
@@ -1081,6 +1084,10 @@ footer {
           <div class="proof-item">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.3" stroke="currentColor" stroke-width="1.2"/><path d="M4.2 7l2 2 3.6-3.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
             No card required
+          </div>
+          <div class="proof-item">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.3" stroke="currentColor" stroke-width="1.2"/><path d="M4.2 7l2 2 3.6-3.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            First leads within 7 days
           </div>
           <div class="proof-item">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.3" stroke="currentColor" stroke-width="1.2"/><path d="M4.2 7l2 2 3.6-3.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1184,13 +1191,13 @@ footer {
         <div class="stat-num">44<em>+</em></div>
         <div class="stat-label">UK councils scanned</div>
       </div>
-      <div class="stat-cell reveal d1">
-        <div class="stat-num">Weekly</div>
-        <div class="stat-label">Automated sweeps</div>
+     <div class="stat-cell reveal d1">
+        <div class="stat-num">Every Monday</div>
+        <div class="stat-label">Fresh leads, without you lifting a finger</div>
       </div>
       <div class="stat-cell reveal d2">
-        <div class="stat-num">0–100</div>
-        <div class="stat-label">Lead scoring system</div>
+        <div class="stat-num">Monday 8 AM</div>
+        <div class="stat-label">Leads in your inbox</div>
       </div>
       <div class="stat-cell reveal d3">
         <div class="stat-num">8–15<em>×</em></div>
@@ -1306,7 +1313,7 @@ footer {
     <div class="tailor-strip reveal">
       <div>
         <div class="ts-label">Your brief. Your criteria.</div>
-        <div class="ts-head">We configure it together — on a call, before your first digest.</div>
+        <div class="ts-head">You speak to our expert. We configure everything. First digest follows within the week.</div>
         <div class="ts-body" style="margin-top:14px">
           Every PlanningScout subscriber starts with a 30-minute onboarding call. We ask the questions most tools ignore.
         </div>
@@ -1344,6 +1351,13 @@ footer {
         <p class="lead reveal d2">Each lead in your weekly digest is pre-read, pre-scored, and pre-qualified. A quick go/no-go decision without opening a single portal.</p>
         <ul class="receive-list">
           <li class="rl-item reveal">
+            <span class="rl-dot">✓</span>
+            <div>
+              <div class="rl-title">First-seen advantage</div>
+              <div class="rl-desc">Leads are delivered before most consultancies have even opened their browser. The gap between decision date and your Monday digest is typically 2–4 days — often before competitors have found it manually.</div>
+            </div>
+          </li>
+          <li class="rl-item reveal d1">
             <span class="rl-dot">✓</span>
             <div>
               <div class="rl-title">Application reference, council &amp; direct portal link</div>
@@ -1450,20 +1464,20 @@ footer {
 <section id="coverage">
   <div class="wrap">
     
-    <div class="cov-intro">
-      <span class="eyebrow reveal">Deep-Level Detection</span>
+    <div class="cov-intro" style="text-align: center; margin: 0 auto 60px auto; max-width: 850px;">
+      <span class="eyebrow reveal" style="justify-content: center;">Deep-Level Detection</span>
       <h2 class="reveal d1">
         We scan the fine print.<br>
         You win the instruction.
       </h2>
-      <p class="lead reveal d2">
-        Planning Scout goes beyond surface-level portal summaries. Our system meticulously <strong>scans full application documents and decision notices</strong> for specific technical markers—from BNG requirements to sequential test failures.
+      <p class="lead reveal d2" style="margin: 0 auto;">
+        Planning portals show you a title. PlanningScout reads the documents — every decision notice, every reason for refusal, every specialist requirement buried in the applications. That's where the real leads are, and that's what most consultancies are missing every single week.
       </p>
       <p style="font-size: 14px; opacity: 0.7; margin-top: 20px;" class="reveal d3">
         Below are example keyword sets for the most common practice areas we configure. Your actual brief is built with you — these are starting points, not constraints.
       </p>
     </div>
-
+     
     <div class="cov-grid">
       
       <div class="cov-card reveal d1">
@@ -1560,9 +1574,10 @@ footer {
         <p class="lead reveal d2">
           Start with a full month free — no credit card, no commitment. See real leads from your target councils before you spend a penny. If it works for you, continue at £149/month.
         </p>
-        <p class="reveal d3" style="font-size:14.5px;color:var(--ink-dim);line-height:1.75;margin-top:6px">
-          A single planning appeal instruction typically generates £5,000–£50,000 in fees. PlanningScout pays for itself with one lead.
-        </p>
+        <div class="pricing-callout reveal d3" style="background: var(--amber-lt); border: 1px solid var(--amber-bdr); border-left: 4px solid var(--amber); padding: 20px 24px; border-radius: var(--r); margin-top: 24px; margin-bottom: 24px; box-shadow: var(--shadow-sm);">
+          <strong style="display: block; font-family: var(--head); font-size: 18px; color: #9a6200; margin-bottom: 8px; line-height: 1.3;">One appeal instruction pays for 30+ months of PlanningScout.</strong>
+          <p style="color: var(--ink-dim); font-size: 14.5px; line-height: 1.6; margin: 0;">At £149/month, you break even with a single instruction — which most clients find within their first few week.</p>
+        </div>
         <div style="margin-top:32px" class="reveal d3">
           <div class="trial-pill">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.3" stroke="currentColor" stroke-width="1.2"/><path d="M4.2 7l2 2 3.6-3.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1625,7 +1640,15 @@ footer {
             <span class="faq-q-txt">How does the free trial work?</span>
             <span class="faq-icon">▾</span>
           </div>
-          <div class="faq-a"><p>You get one full month free with no credit card required. We start with an onboarding call, configure your brief, run the first scan, and send you a real digest. After the trial, choose whether to continue at £149/month. If it's not delivering value, you simply don't subscribe — no awkward cancellations.</p></div>
+          <div class="faq-a"><p>You get one full month free with no credit card required. We start with an onboarding call, configure your brief, run the first scan, and send you a real digest within a week. After the month, choose to continue at £149/month or simply walk away. There's no cancellation process, no awkward conversation, and nothing to cancel if you never subscribed in the first place.</p></div>
+        </div>
+
+        <div class="faq-item reveal d1">
+          <div class="faq-q" onclick="faqToggle(this)">
+            <span class="faq-q-txt">What if the leads coming through aren't right for my practice?</span>
+            <span class="faq-icon">▾</span>
+          </div>
+          <div class="faq-a"><p>Your brief is fully adjustable — that's exactly what the onboarding call is for. If after your first digest the leads aren't hitting the mark, just tell us what's wrong: too broad, wrong use class, wrong region, wrong decision type. We'll refine the keywords and thresholds within 48 hours. The trial period exists precisely so you can assess quality and calibrate before you commit.</p></div>
         </div>
 
         <div class="faq-item reveal d1">
@@ -1694,7 +1717,7 @@ footer {
 <section id="cta">
   <div class="wrap">
     <div class="cta-inner">
-      <div class="cta-eyebrow reveal">Start for free</div>
+      <div class="cta-eyebrow reveal">No card. No commitment. Real leads.</div>
       <h2 class="cta-h reveal d1">See real leads before<br>you spend a penny.</h2>
       <p class="cta-sub reveal d2">
         Enter your email and we'll send you a real sample digest — the format your practice would receive every Monday. No card, no commitment.
