@@ -104,8 +104,14 @@ nav.scrolled { box-shadow: var(--shadow-sm); }
   justify-content: space-between; gap: 24px;
 }
 /* ── LOGO ── */
-.logo { display: flex; align-items: center; gap: 11px; flex-shrink: 0; }
-.logo-mark {
+.logo { 
+  display: flex; 
+  align-items: center; 
+  gap: 11px; 
+  flex-shrink: 0; 
+  position: relative;
+  top: 2px; /* This shifts the entire logo group down */
+}.logo-mark {
   width: 38px; height: 38px;
   background: var(--navy);
   border-radius: 10px;
