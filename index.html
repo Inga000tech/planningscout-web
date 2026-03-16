@@ -125,11 +125,12 @@ nav.scrolled { box-shadow: var(--shadow-sm); }
 }
 .logo-text span { color: var(--amber); }
 .nav-links { display: flex; gap: 2px; list-style: none; }
-@media (max-width: 720px) { .nav-links { display: none; } }
+@media (max-width: 860px) { .nav-links { display: none; } }
 .nav-links a {
   font-size: 14px; font-weight: 500; color: var(--ink-dim);
-  padding: 7px 14px; border-radius: var(--r);
+  padding: 10px 14px; border-radius: var(--r); /* increased from 7px to 10px for 44px touch target */
   transition: color .15s, background .15s;
+  min-height: 44px; display: flex; align-items: center; /* 44px minimum touch target */
 }
 .nav-links a:hover { color: var(--ink); background: var(--surface-2); }
 .nav-cta {
@@ -138,25 +139,82 @@ nav.scrolled { box-shadow: var(--shadow-sm); }
 }
 .btn-outline-nav {
   font-family: var(--body); font-size: 13.5px; font-weight: 500;
-  color: var(--ink-mid); padding: 8px 16px; border-radius: var(--r);
+  color: var(--ink-mid); padding: 10px 16px; border-radius: var(--r);
   border: 1px solid var(--border-2);
   transition: border-color .15s, color .15s;
   white-space: nowrap;
 }
+@media (max-width: 500px) { .btn-outline-nav { display: none; } }
 .btn-outline-nav:hover { border-color: var(--ink-dim); color: var(--ink); }
 .btn-primary {
   font-family: var(--body); font-size: 13.5px; font-weight: 600;
   color: #fff; background: var(--navy);
-  padding: 9px 20px; border-radius: var(--r);
+  padding: 10px 20px; border-radius: var(--r);
   border: none; cursor: pointer; white-space: nowrap;
+  touch-action: manipulation; /* removes 300ms tap delay on iOS */
   transition: background .18s, transform .18s, box-shadow .18s;
   box-shadow: 0 2px 8px rgba(30,58,95,.3);
+  min-height: 44px; /* iOS/Android minimum touch target */
 }
 .btn-primary:hover {
   background: #162e4d;
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(30,58,95,.28);
 }
+/* ── HAMBURGER BUTTON ── */
+.nav-burger {
+  display: none;
+  width: 44px; height: 44px; /* exact 44px iOS touch target */
+  flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+  background: transparent; border: 1px solid var(--border-2);
+  border-radius: var(--r); cursor: pointer; flex-shrink: 0;
+  transition: background .15s, border-color .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-burger:hover { background: var(--surface-2); border-color: var(--border-2); }
+.nav-burger span {
+  display: block; width: 18px; height: 1.5px;
+  background: var(--ink-dim); border-radius: 2px;
+  transition: transform .25s var(--ease), opacity .2s, background .15s;
+}
+@media (max-width: 860px) { .nav-burger { display: flex; } }
+/* ── MOBILE DRAWER ── */
+.nav-drawer {
+  position: fixed; top: 66px; left: 0; right: 0; z-index: 98;
+  background: rgba(255,255,255,.97);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px 20px;
+  display: none;
+  flex-direction: column; gap: 2px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  /* Animate down */
+  transform: translateY(-8px); opacity: 0;
+  transition: transform .25s var(--ease), opacity .25s;
+}
+.nav-drawer.open {
+  display: flex;
+  transform: translateY(0); opacity: 1;
+}
+.nav-drawer a {
+  font-family: var(--body); font-size: 15px; font-weight: 500;
+  color: var(--ink-mid); padding: 13px 16px; border-radius: var(--r);
+  transition: background .15s, color .15s;
+  min-height: 44px; display: flex; align-items: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-drawer a:hover, .nav-drawer a:active { background: var(--surface-2); color: var(--ink); }
+.nav-drawer .drawer-divider {
+  height: 1px; background: var(--border); margin: 6px 0;
+}
+.nav-drawer .drawer-cta {
+  margin-top: 4px;
+  background: var(--navy); color: #fff; text-align: center;
+  font-weight: 600; border-radius: var(--r2);
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(30,58,95,.25);
+}
+.nav-drawer .drawer-cta:hover, .nav-drawer .drawer-cta:active { background: #162e4d; color: #fff; }
 
 /* ────────────────────────────────────────────────
    SECTIONS
@@ -200,6 +258,7 @@ h2 {
   background-image: radial-gradient(circle, #c8d4e0 1px, transparent 1px);
   background-size: 30px 30px;
   opacity: .4;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.5) 0%, transparent 60%);
   mask-image: linear-gradient(180deg, rgba(0,0,0,.5) 0%, transparent 60%);
 }
 .hero-content {
@@ -963,8 +1022,10 @@ h1 em { font-style: italic; color: var(--amber); }
 }
 .email-in {
   flex: 1; background: transparent; border: none; outline: none;
-  padding: 15px 18px; font-family: var(--body); font-size: 14.5px;
+  padding: 15px 18px; font-family: var(--body); font-size: 16px; /* 16px minimum prevents iOS auto-zoom */
   color: #fff;
+  -webkit-appearance: none; /* removes iOS inner shadow */
+  border-radius: 0; /* prevents iOS rounding the left side */
 }
 .email-in::placeholder { color: rgba(255,255,255,.4); }
 .email-btn {
@@ -1204,12 +1265,28 @@ img, video, iframe, svg { max-width: 100%; }
       <li><a href="#faq">FAQ</a></li>
     </ul>
     <div class="nav-cta">
-      <a href="#cta" class="btn-outline-nav nav-hide-mobile">See sample</a>
+      <a href="#cta" class="btn-outline-nav">See sample</a>
       <a href="#cta" class="btn-primary">Try free →</a>
     </div>
+    <!-- Hamburger — shows on tablet and mobile -->
+    <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
+      <span id="b1"></span>
+      <span id="b2"></span>
+      <span id="b3"></span>
+    </button>
   </div>
 </nav>
 
+<!-- Mobile/tablet navigation drawer -->
+<div class="nav-drawer" id="navDrawer" role="navigation" aria-label="Mobile menu">
+  <a href="#how" onclick="closeNav()">How it works</a>
+  <a href="#usecases" onclick="closeNav()">Use cases</a>
+  <a href="#receive" onclick="closeNav()">What you receive</a>
+  <a href="#pricing" onclick="closeNav()">Pricing</a>
+  <a href="#faq" onclick="closeNav()">FAQ</a>
+  <div class="drawer-divider"></div>
+  <a href="#cta" class="drawer-cta" onclick="closeNav()">Start free — no card needed →</a>
+</div>
 
 <!-- ════ HERO ════ -->
 <section id="hero">
@@ -1913,6 +1990,35 @@ window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 40);
 }, { passive: true });
 
+/* Mobile nav drawer */
+const burger = document.getElementById('navBurger');
+const drawer = document.getElementById('navDrawer');
+let navOpen = false;
+
+function openNav() {
+  navOpen = true;
+  drawer.classList.add('open');
+  burger.setAttribute('aria-expanded', 'true');
+  // Animate spans into X
+  document.getElementById('b1').style.transform = 'translateY(6.5px) rotate(45deg)';
+  document.getElementById('b2').style.opacity = '0';
+  document.getElementById('b3').style.transform = 'translateY(-6.5px) rotate(-45deg)';
+  document.getElementById('b1').style.background = 'var(--ink)';
+  document.getElementById('b3').style.background = 'var(--ink)';
+}
+function closeNav() {
+  navOpen = false;
+  drawer.classList.remove('open');
+  burger.setAttribute('aria-expanded', 'false');
+  document.getElementById('b1').style.transform = '';
+  document.getElementById('b2').style.opacity = '';
+  document.getElementById('b3').style.transform = '';
+  document.getElementById('b1').style.background = '';
+  document.getElementById('b3').style.background = '';
+}
+burger.addEventListener('click', () => navOpen ? closeNav() : openNav());
+// Close drawer on scroll (good UX — user started scrolling, dismiss menu)
+window.addEventListener('scroll', () => { if (navOpen) closeNav(); }, { passive: true });
 /* Scroll reveal */
 // Reduced threshold + no negative rootMargin = reliable on iOS/Android
 // Also: if IntersectionObserver isn't supported or fails, show everything
