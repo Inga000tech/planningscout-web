@@ -1914,12 +1914,23 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 /* Scroll reveal */
-const ro = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('vis'); ro.unobserve(e.target); }
-  });
-}, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
-document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+// Reduced threshold + no negative rootMargin = reliable on iOS/Android
+// Also: if IntersectionObserver isn't supported or fails, show everything
+function revealAll() {
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('vis'));
+}
+if ('IntersectionObserver' in window) {
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('vis'); ro.unobserve(e.target); }
+    });
+  }, { threshold: 0.04, rootMargin: '0px 0px 0px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+  // Fallback: after 2s, show anything still hidden (catches iOS Safari edge cases)
+  setTimeout(revealAll, 2000);
+} else {
+  revealAll();
+}
 
 /* FAQ */
 function faqToggle(btn) {
