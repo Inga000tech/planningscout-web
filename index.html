@@ -1265,7 +1265,6 @@ img, video, iframe, svg { max-width: 100%; }
       <li><a href="#faq">FAQ</a></li>
     </ul>
     <div class="nav-cta">
-      <a href="#cta" class="btn-outline-nav">See sample</a>
       <a href="#cta" class="btn-primary">Try free →</a>
     </div>
     <!-- Hamburger — shows on tablet and mobile -->
@@ -2047,19 +2046,44 @@ function faqToggle(btn) {
 }
 
 /* Email submit */
-function handleSub() {
+/* Updated handleSub Function */
+async function handleSub() {
   const inp = document.getElementById('emailInput');
   const msg = document.getElementById('msg');
-  const v = inp.value.trim();
-  if (!v || !v.includes('@') || !v.includes('.')) {
+  const email = inp.value.trim();
+
+  // Basic validation to ensure it's an email
+  if (!email || !email.includes('@')) {
     msg.style.color = '#dc2626';
     msg.textContent = '⚠ Please enter a valid email address.';
     return;
   }
-  // 👉 Replace with Formspree / Loops / ConvertKit endpoint
-  msg.style.color = '#16a34a';
-  msg.textContent = '✓ On its way — check your inbox in the next few hours.';
-  inp.value = '';
+
+  // Show a "Sending" status
+  msg.style.color = '#1e3a5f';
+  msg.textContent = 'Connecting to server...';
+
+  try {
+    // This sends the data to your Formspree account
+    const response = await fetch("https://formspree.io/f/xlgpnweo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: email })
+    });
+
+    if (response.ok) {
+      // Success state
+      msg.style.color = '#16a34a';
+      msg.textContent = '✓ Success! Check your inbox for your sample leads.';
+      inp.value = ''; // Clear the input box
+    } else {
+      throw new Error('Formspree error');
+    }
+  } catch (error) {
+    // Error state
+    msg.style.color = '#dc2626';
+    msg.textContent = '⚠ Something went wrong. Please try again.';
+  }
 }
 document.getElementById('emailInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') handleSub();
