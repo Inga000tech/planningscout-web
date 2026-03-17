@@ -2052,37 +2052,31 @@ async function handleSub() {
   const msg = document.getElementById('msg');
   const email = inp.value.trim();
 
-  // Basic validation to ensure it's an email
+  // Basic validation
   if (!email || !email.includes('@')) {
     msg.style.color = '#dc2626';
     msg.textContent = '⚠ Please enter a valid email address.';
     return;
   }
 
-  // Show a "Sending" status
   msg.style.color = '#1e3a5f';
   msg.textContent = 'Connecting to server...';
 
   try {
-   const response = await fetch("https://planningscout-handler.inger-balaj.workers.dev", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ email: email })
-});
+    const response = await fetch("https://planningscout-handler.inger-balaj.workers.dev", {
+      method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: email })
     });
 
     if (response.ok) {
-      // Success state
       msg.style.color = '#16a34a';
       msg.textContent = '✓ Success! Check your inbox for your sample leads.';
-      inp.value = ''; // Clear the input box
+      inp.value = ''; 
     } else {
       throw new Error('Worker error');
     }
   } catch (error) {
-    // Error state
     msg.style.color = '#dc2626';
     msg.textContent = '⚠ Something went wrong. Please try again.';
   }
